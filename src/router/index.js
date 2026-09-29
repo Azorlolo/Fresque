@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import FresqueView from '../views/FresqueView.vue'
+import MapView from '../views/MapView.vue'
 import { getFresque } from '../data/fresques'
 import { isUnlocked, unlock } from '../store/progress'
 
@@ -9,6 +10,7 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: '/', name: 'home', component: HomeView },
+    { path: '/carte', name: 'carte', component: MapView },
     {
       path: '/fresque/:id',
       name: 'fresque',

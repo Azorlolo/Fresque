@@ -31,6 +31,10 @@ body {
 
 /* ---------- En-tête ---------- */
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-s);
   padding: var(--space-s) var(--space-m);
   background: var(--primary);
   transition: background-color 0.3s;
@@ -165,6 +169,54 @@ main > .fresque-image { border-radius: var(--radius); }
   border: 1px solid #ecd48a;
   border-radius: var(--radius);
 }
+
+/* ---------- Carte ---------- */
+.campus-map {
+  height: clamp(320px, 60vh, 520px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  z-index: 0; /* garde les contrôles Leaflet sous l'en-tête */
+}
+
+.map-pin span {
+  display: block;
+  width: 28px;
+  height: 28px;
+  background: var(--pin-color);
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.map-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: inherit;
+}
+
+.charade-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}
+.charade-list li + li {
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--border);
+}
+.charade-list .answer {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.charade-list .solved p { color: var(--muted); }
+.charade-list .solved .answer { color: var(--primary); text-decoration: none; }
 
 /* ---------- Boutons et liens ---------- */
 .reset {

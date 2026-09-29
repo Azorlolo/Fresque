@@ -21,6 +21,7 @@ const themeVars = computed(() => {
   <div class="app" :style="themeVars">
     <header>
       <router-link to="/">Fresque Interactive</router-link>
+      <router-link to="/carte">Carte</router-link>
     </header>
     <main>
       <router-view :key="$route.fullPath" />

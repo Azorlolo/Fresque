@@ -31,12 +31,14 @@ Une petite charade est en dessous de chaque fresque pour diriger l'utilisateur v
 - [x] Charade vers une fresque non scannée aléatoire
 - [x] Déverrouillage de la conclusion une fois toutes les fresques scannées
 - [x] Sauvegarde de la progression de l'utilisateur (localStorage)
+- [x] Carte interactive du campus (UNC, Nouville) avec les fresques scannées + liste des charades débloquées
 
 ## 🛠️ Stack technique
 
 - **Vue 3** + **Vite** (100 % front, pas de back)
 - **Vue Router** en mode hash (`#/...`) → fonctionne sur tout hébergement statique
 - **localStorage** pour la progression
+- **Leaflet** + tuiles OpenStreetMap pour la carte
 
 ## 🚀 Installation
 
@@ -62,7 +64,7 @@ Chaque QR code doit contenir l'URL suivante :
 https://<site>/#/fresque/<id>?k=<token>
 ```
 
-`id` et `token` sont définis dans [src/data/fresques.js](src/data/fresques.js). Exemple :
+`id`, `token` et `position` (coordonnées GPS sur la carte) sont définis dans [src/data/fresques.js](src/data/fresques.js). Exemple :
 `https://<site>/#/fresque/tortue?k=t7k2p9`
 
 Le jeton empêche de débloquer une fresque en devinant son URL, puis il est retiré de la barre d'adresse.
@@ -83,7 +85,9 @@ Le jeton empêche de débloquer une fresque en devinant son URL, puis il est ret
     ├── router/index.js         → routes + déblocage via jeton
     ├── views/HomeView.vue      → liste des fresques + conclusion
     ├── views/FresqueView.vue   → fresque, zones cliquables, détail, charade
+    ├── views/MapView.vue       → carte du campus + charades débloquées
     └── components/
+        ├── CampusMap.vue       → carte Leaflet (repères des fresques scannées)
         ├── FresqueCard.vue     → carte grisée / dégrisée
         └── FresqueImage.vue    → image + zones cliquables
 ```
