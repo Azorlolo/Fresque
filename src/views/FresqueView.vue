@@ -1,0 +1,46 @@
+<script setup>
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import FresqueImage from '../components/FresqueImage.vue'
+import { getFresque } from '../data/fresques'
+import { randomLockedFresque } from '../store/progress'
+
+const route = useRoute()
+const fresque = getFresque(route.params.id)
+
+const selectedZoneId = ref(null)
+const selectedZone = computed(() => fresque.zones.find((z) => z.id === selectedZoneId.value))
+
+// Tirée une fois à l'ouverture de la page
+const prochaine = randomLockedFresque()
+</script>
+
+<template>
+  <h1>{{ fresque.titre }}</h1>
+
+  <FresqueImage
+    :fresque="fresque"
+    interactive
+    :selected-zone="selectedZoneId"
+    @select="selectedZoneId = $event"
+  />
+  <p class="hint">Touchez un élément de la fresque pour en savoir plus.</p>
+
+  <section v-if="selectedZone" class="zone-info">
+    <h3>{{ selectedZone.label }}</h3>
+    <p>{{ selectedZone.info }}</p>
+  </section>
+
+  <section>
+    <h2><em>{{ fresque.nomScientifique }}</em></h2>
+    <p>{{ fresque.histoire }}</p>
+  </section>
+
+  <section class="charade">
+    <h2>Charade</h2>
+    <p v-if="prochaine">{{ prochaine.charade }}</p>
+    <p v-else>Vous avez découvert toutes les fresques ! La conclusion vous attend sur l'accueil.</p>
+  </section>
+
+  <router-link to="/">← Retour aux fresques</router-link>
+</template>
