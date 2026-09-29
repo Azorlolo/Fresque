@@ -9,12 +9,17 @@ const unlocked = computed(() => isUnlocked(props.fresque.id))
 </script>
 
 <template>
-  <router-link v-if="unlocked" :to="{ name: 'fresque', params: { id: fresque.id } }" class="card">
+  <router-link
+    v-if="unlocked"
+    :to="{ name: 'fresque', params: { id: fresque.id } }"
+    class="card"
+    :style="{ '--card-color': fresque.theme.primary }"
+  >
     <FresqueImage :fresque="fresque" />
-    <p>{{ fresque.titre }}</p>
+    <p class="card-title">{{ fresque.titre }}</p>
   </router-link>
   <div v-else class="card locked" aria-disabled="true">
     <FresqueImage :fresque="fresque" />
-    <p>🔒 À scanner</p>
+    <p class="card-title">🔒 À scanner</p>
   </div>
 </template>

@@ -4,8 +4,12 @@
 //  - id        : identifiant utilisé dans l'URL (#/fresque/<id>)
 //  - token     : jeton secret mis dans le QR code (#/fresque/<id>?k=<token>)
 //                → empêche de débloquer une fresque en devinant son URL
-//  - image     : chemin vers l'image dans /public (optionnel, sinon placeholder coloré)
-//  - couleur   : couleur du placeholder si pas d'image
+//  - image     : nom du fichier dans /public (optionnel, sinon dégradé aux couleurs du thème)
+//  - theme     : couleurs de la page de la fresque
+//                  primary : titres, en-tête, liens
+//                  accent  : touches de couleur (bordures, zone sélectionnée)
+//                  bg      : fond de page
+//                  text    : couleur du texte
 //  - nomScientifique, histoire : fiche détail de la fresque
 //  - zones     : éléments cliquables sur la fresque, positions en % de l'image
 //  - charade   : énigme qui mène À CETTE fresque (affichée sur les autres fresques)
@@ -16,42 +20,47 @@ export const fresques = [
     titre: 'La Tortue',
     token: 't7k2p9',
     image: null,
-    couleur: '#3b8f6e',
+    theme: { primary: '#0e5a78', accent: '#2ba3c4', bg: '#eef5f8', text: '#16323d' },
     nomScientifique: 'Chelonia mydas',
     histoire: "Il était une fois une tortue qui traversait l'océan...",
     zones: [
-      { id: 'carapace', label: 'Carapace', x: 30, y: 30, w: 40, h: 30, info: 'La carapace protège la tortue.' },
-      { id: 'tete', label: 'Tête', x: 70, y: 40, w: 15, h: 15, info: 'Elle peut rentrer sa tête.' },
+      { id: 'carapace', label: 'Carapace', x: 20, y: 15, w: 35, h: 40, info: 'La carapace est faite de kératine, une protéine.' },
+      { id: 'molecule', label: 'Molécule de kératine', x: 75, y: 50, w: 20, h: 45, info: 'Molécule de kératine, protéine de la carapace.' },
     ],
     charade: 'Mon premier est un fruit sec... Mon tout nage lentement dans le lagon.',
   },
   {
-    id: 'requin',
-    titre: 'Le Requin',
-    token: 'r4m8x1',
+    id: 'hibiscus',
+    titre: "L'Hibiscus",
+    token: 'h5w2q8',
     image: null,
-    couleur: '#3a6ea5',
-    nomScientifique: 'Carcharhinus melanopterus',
-    histoire: 'Plus loin, un requin veillait sur le récif...',
+    theme: { primary: '#a3222f', accent: '#e8708f', bg: '#fbf2f2', text: '#3a1f22' },
+    nomScientifique: 'Hibiscus rosa-sinensis',
+    histoire: 'Sur la terre, les fleurs rouges éclataient de couleur...',
     zones: [
-      { id: 'aileron', label: 'Aileron', x: 45, y: 15, w: 15, h: 20, info: "L'aileron a une pointe noire." },
+      { id: 'fleur', label: 'Fleur rouge', x: 40, y: 35, w: 25, h: 45, info: 'Le rouge des pétales vient de la cyanidine.' },
+      { id: 'molecule', label: 'Molécule de cyanidine', x: 75, y: 50, w: 20, h: 45, info: 'Molécule de cyanidine, pigment du pétale.' },
     ],
-    charade: 'Mon premier est une note de musique... Mon tout a des nageoires pointe noire.',
+    charade: 'Je suis une fleur rouge que l’on glisse derrière l’oreille.',
   },
   {
-    id: 'corail',
-    titre: 'Le Corail',
-    token: 'c9v3n6',
+    id: 'perruche',
+    titre: 'La Perruche',
+    token: 'p3j7d4',
     image: null,
-    couleur: '#c0604a',
-    nomScientifique: 'Acropora cervicornis',
-    histoire: 'Au fond, le corail abritait toute la vie du récif...',
+    theme: { primary: '#2f6b2a', accent: '#d9a91a', bg: '#f1f6ee', text: '#1f2e1c' },
+    nomScientifique: 'Cyanoramphus saisseti', // à vérifier avec l'espèce peinte
+    histoire: 'Dans la forêt, deux perruches observaient le monde...',
     zones: [
-      { id: 'branches', label: 'Branches', x: 20, y: 40, w: 60, h: 40, info: 'Ses branches ressemblent à des bois de cerf.' },
+      { id: 'plumes', label: 'Plumage', x: 30, y: 25, w: 25, h: 45, info: 'Les couleurs des plumes viennent de la mélanine et des caroténoïdes.' },
+      { id: 'molecule', label: 'Molécule de mélanine', x: 72, y: 65, w: 18, h: 30, info: 'Mélanine et caroténoïdes, pigments de plume.' },
     ],
-    charade: 'Je ne suis ni plante ni pierre, mais un animal qui construit des récifs.',
+    charade: 'Vert de la tête à la queue, je bavarde dans les arbres.',
   },
 ]
+
+// Thème de l'accueil (neutre)
+export const defaultTheme = { primary: '#2b2b2b', accent: '#7a7a7a', bg: '#f6f5f2', text: '#222222' }
 
 export const conclusion = {
   titre: 'Conclusion',

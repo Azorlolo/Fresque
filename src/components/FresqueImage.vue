@@ -9,7 +9,10 @@ defineEmits(['select'])
 </script>
 
 <template>
-  <div class="fresque-image" :style="{ background: fresque.image ? null : fresque.couleur }">
+  <div
+    class="fresque-image"
+    :style="fresque.image ? null : { background: `linear-gradient(135deg, ${fresque.theme.primary}, ${fresque.theme.accent})` }"
+  >
     <img v-if="fresque.image" :src="fresque.image" :alt="fresque.titre" />
     <span v-else class="placeholder">{{ fresque.titre }}</span>
 
@@ -21,6 +24,7 @@ defineEmits(['select'])
         :class="{ selected: zone.id === selectedZone }"
         :style="{ left: zone.x + '%', top: zone.y + '%', width: zone.w + '%', height: zone.h + '%' }"
         :title="zone.label"
+        :aria-label="zone.label"
         @click="$emit('select', zone.id)"
       ></button>
     </template>

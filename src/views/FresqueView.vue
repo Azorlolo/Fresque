@@ -31,8 +31,8 @@ const prochaine = randomLockedFresque()
     <p>{{ selectedZone.info }}</p>
   </section>
 
-  <section>
-    <h2><em>{{ fresque.nomScientifique }}</em></h2>
+  <section class="panel">
+    <h2 class="scientific">{{ fresque.nomScientifique }}</h2>
     <p>{{ fresque.histoire }}</p>
   </section>
 
@@ -42,5 +42,5 @@ const prochaine = randomLockedFresque()
     <p v-else>Vous avez découvert toutes les fresques ! La conclusion vous attend sur l'accueil.</p>
   </section>
 
-  <router-link to="/">← Retour aux fresques</router-link>
+  <router-link to="/" class="back">← Retour aux fresques</router-link>
 </template>
