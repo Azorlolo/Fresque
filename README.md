@@ -69,6 +69,18 @@ https://<site>/#/fresque/<id>?k=<token>
 
 Le jeton empêche de débloquer une fresque en devinant son URL, puis il est retiré de la barre d'adresse.
 
+Liens actuels (remplacer `<site>` par l'adresse d'hébergement) :
+
+| # | Fresque | Lien |
+|---|---|---|
+| 1 | La Tortue | `https://<site>/#/fresque/tortue?k=t7k2p9` |
+| 2 | L'Hibiscus | `https://<site>/#/fresque/hibiscus?k=h5w2q8` |
+| 3 | La Perruche | `https://<site>/#/fresque/perruche?k=p3j7d4` |
+
+En local (`npm run dev`) : `http://localhost:5173/#/fresque/tortue?k=t7k2p9`, etc. Pour tester sur téléphone, remplacer `localhost` par l'IP affichée au démarrage.
+
+Si un jeton est modifié dans `fresques.js`, penser à mettre à jour ce tableau et à régénérer le QR code.
+
 ## 📁 Structure du projet
 
 ```
