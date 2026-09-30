@@ -20,7 +20,7 @@ export const fresques = [
     id: 'tortue',
     titre: 'La Tortue',
     token: 't7k2p9',
-    position: [-22.2622, 166.4031], // à ajuster sur place
+    position: [-22.262728281085298, 166.4049415341517], // à ajuster sur place
     image: null,
     theme: { primary: '#0e5a78', accent: '#2ba3c4', bg: '#eef5f8', text: '#16323d' },
     nomScientifique: 'Chelonia mydas',
@@ -35,7 +35,7 @@ export const fresques = [
     id: 'hibiscus',
     titre: "L'Hibiscus",
     token: 'h5w2q8',
-    position: [-22.2628, 166.4040], // à ajuster sur place
+    position: [-22.262880587048414, 166.4042242705398], // à ajuster sur place
     image: null,
     theme: { primary: '#a3222f', accent: '#e8708f', bg: '#fbf2f2', text: '#3a1f22' },
     nomScientifique: 'Hibiscus rosa-sinensis',
@@ -50,7 +50,7 @@ export const fresques = [
     id: 'perruche',
     titre: 'La Perruche',
     token: 'p3j7d4',
-    position: [-22.2633, 166.4028], // à ajuster sur place
+    position: [-22.263146189118988, 166.4045984387007], // à ajuster sur place
     image: null,
     theme: { primary: '#2f6b2a', accent: '#d9a91a', bg: '#f1f6ee', text: '#1f2e1c' },
     nomScientifique: 'Cyanoramphus saisseti', // à vérifier avec l'espèce peinte
