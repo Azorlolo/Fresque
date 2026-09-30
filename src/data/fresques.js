@@ -20,7 +20,7 @@ export const fresques = [
     id: 'tortue',
     titre: 'La Tortue',
     token: 't7k2p9',
-    position: [-22.262728281085298, 166.4049415341517], // à ajuster sur place
+    position: [-22.262295822667305, 166.4054343431178], // à ajuster sur place
     image: null,
     theme: { primary: '#0e5a78', accent: '#2ba3c4', bg: '#eef5f8', text: '#16323d' },
     nomScientifique: 'Chelonia mydas',
@@ -69,8 +69,8 @@ export const defaultTheme = { primary: '#2b2b2b', accent: '#7a7a7a', bg: '#f6f5f
 // Carte : campus de Nouville de l'Université de la Nouvelle-Calédonie
 export const campus = {
   nom: 'Université de la Nouvelle-Calédonie – Bibliotheque unversitaire',
-  centre: [-22.262934916032748, 166.4047023065139],
-  zoom: 35,
+  centre: [-22.262686818338413, 166.40498567733079],
+  zoom: 20,
 }
 
 export const conclusion = {
