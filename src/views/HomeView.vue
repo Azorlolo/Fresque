@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FresqueCard from '../components/FresqueCard.vue'
 import { fresques, conclusion } from '../data/fresques'
@@ -7,9 +7,14 @@ import { unlockedCount, allUnlocked, reset } from '../store/progress'
 
 const route = useRoute()
 const lockedMessage = computed(() => route.query.locked !== undefined)
+const percent = computed(() => Math.round((unlockedCount.value / fresques.length) * 100))
+
+// Fenêtre de confirmation native (<dialog>) : fond assombri, Échap pour annuler
+const resetDialog = ref(null)
 
 function confirmReset() {
-  if (confirm('Effacer toute la progression ?')) reset()
+  reset()
+  resetDialog.value.close()
 }
 </script>
 
@@ -18,9 +23,21 @@ function confirmReset() {
     Cette fresque est verrouillée : scannez son QR code pour la débloquer.
   </p>
 
-  <div>
-    <h1>Les fresques</h1>
-    <p class="progress">Fresques découvertes : {{ unlockedCount }} / {{ fresques.length }}</p>
+  <div class="progress">
+    <div class="progress-label">
+      <span>Fresques découvertes</span>
+      <strong>{{ unlockedCount }} / {{ fresques.length }}</strong>
+    </div>
+    <div
+      class="progress-track"
+      role="progressbar"
+      aria-label="Fresques découvertes"
+      :aria-valuenow="unlockedCount"
+      aria-valuemin="0"
+      :aria-valuemax="fresques.length"
+    >
+      <div class="progress-fill" :style="{ width: percent + '%' }"></div>
+    </div>
   </div>
 
   <div class="grid">
@@ -33,5 +50,17 @@ function confirmReset() {
     <p v-else>🔒 Scannez toutes les fresques pour découvrir la fin de l'histoire.</p>
   </section>
 
-  <button class="reset" @click="confirmReset">Réinitialiser la progression</button>
+  <button class="btn-danger reset" @click="resetDialog.showModal()">Réinitialiser la progression</button>
+
+  <!-- Un clic sur le fond (hors de .dialog-body) ferme la fenêtre -->
+  <dialog ref="resetDialog" class="dialog" @click.self="resetDialog.close()">
+    <div class="dialog-body">
+      <h2>Réinitialiser la progression ?</h2>
+      <p>Toutes les fresques découvertes seront de nouveau verrouillées. Cette action est irréversible.</p>
+      <div class="dialog-actions">
+        <button class="btn-secondary" autofocus @click="resetDialog.close()">Annuler</button>
+        <button class="btn-danger" @click="confirmReset">Réinitialiser</button>
+      </div>
+    </div>
+  </dialog>
 </template>

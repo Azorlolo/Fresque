@@ -1,7 +1,6 @@
-<!-- Carte d'une fresque sur l'accueil : grisée et non cliquable tant qu'elle n'est pas scannée -->
+<!-- Carte d'une fresque sur l'accueil : vignette grise et non cliquable tant qu'elle n'est pas scannée -->
 <script setup>
 import { computed } from 'vue'
-import FresqueImage from './FresqueImage.vue'
 import { isUnlocked } from '../store/progress'
 
 const props = defineProps({ fresque: { type: Object, required: true } })
@@ -15,11 +14,11 @@ const unlocked = computed(() => isUnlocked(props.fresque.id))
     class="card"
     :style="{ '--card-color': fresque.theme.primary }"
   >
-    <FresqueImage :fresque="fresque" />
+    <img class="card-thumb" :src="fresque.thumbnail.color" :alt="fresque.titre" />
     <p class="card-title">{{ fresque.titre }}</p>
   </router-link>
   <div v-else class="card locked" aria-disabled="true">
-    <FresqueImage :fresque="fresque" />
+    <img class="card-thumb" :src="fresque.thumbnail.gray" alt="Fresque non découverte" />
     <p class="card-title">🔒 À scanner</p>
   </div>
 </template>

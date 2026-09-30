@@ -11,6 +11,7 @@ defineEmits(['select'])
 <template>
   <div
     class="fresque-image"
+    :class="{ 'has-image': fresque.image }"
     :style="fresque.image ? null : { background: `linear-gradient(135deg, ${fresque.theme.primary}, ${fresque.theme.accent})` }"
   >
     <img v-if="fresque.image" :src="fresque.image" :alt="fresque.titre" />
