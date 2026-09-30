@@ -68,9 +68,9 @@ export const defaultTheme = { primary: '#2b2b2b', accent: '#7a7a7a', bg: '#f6f5f
 
 // Carte : campus de Nouville de l'Université de la Nouvelle-Calédonie
 export const campus = {
-  nom: 'Université de la Nouvelle-Calédonie – Campus de Nouville',
-  centre: [-22.2627, 166.4034],
-  zoom: 17,
+  nom: 'Université de la Nouvelle-Calédonie – Bibliotheque unversitaire',
+  centre: [-22.262934916032748, 166.4047023065139],
+  zoom: 35,
 }
 
 export const conclusion = {
