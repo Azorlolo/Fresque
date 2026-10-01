@@ -1,3 +1,6 @@
+/* Mobile first : les styles de base visent le téléphone,
+   les media queries min-width enrichissent la mise en page sur les écrans plus larges. */
+
 /* ---------- Variables ----------
    --primary, --accent, --bg, --text sont définies par fresque dans App.vue
    (voir `theme` dans src/data/fresques.js). */
@@ -26,52 +29,20 @@ body {
 
 .app {
   min-height: 100vh;
+  min-height: 100dvh; /* hauteur réelle sur mobile, barre d'adresse comprise */
   overflow-x: clip; /* une page du livre qui tourne peut déborder de l'écran */
   background: var(--bg);
   color: var(--text);
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* ---------- En-tête ---------- */
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-s);
-  padding: var(--space-s) var(--space-m);
-  background: var(--primary);
-  transition: background-color 0.3s;
-}
-header a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-header nav {
-  display: flex;
-  gap: 4px;
-}
-header nav a {
-  padding: 4px 12px;
-  font-weight: 500;
-  border-radius: 999px;
-  opacity: 0.8;
-  transition: background-color 0.15s, opacity 0.15s;
-}
-header nav a:hover { opacity: 1; }
-header nav a.active {
-  background: rgba(255, 255, 255, 0.18);
-  opacity: 1;
-}
-
 main {
   max-width: 880px;
   margin: 0 auto;
-  padding: var(--space-l) var(--space-s) var(--space-xl);
+  padding: var(--space-m) var(--space-s) var(--space-xl);
   display: flex;
   flex-direction: column;
-  gap: var(--space-l);
+  gap: var(--space-m);
 }
 
 /* ---------- Typographie ---------- */
@@ -136,6 +107,7 @@ a { color: var(--primary); }
 .card-title {
   padding: var(--space-s);
   font-weight: 600;
+  text-align: center;
 }
 .card.locked { cursor: not-allowed; }
 .card.locked .card-thumb { opacity: 0.7; }
@@ -198,28 +170,38 @@ main > .fresque-image { border-radius: var(--radius); }
 }
 
 .hint {
-  margin-top: calc(-1 * var(--space-m));
+  margin-top: calc(-1 * var(--space-s));
   font-size: 0.9rem;
   color: var(--muted);
 }
 
 /* ---------- Blocs de contenu ---------- */
-.panel,
 .zone-info,
+.next-step,
 .charade,
 .conclusion {
-  padding: var(--space-m);
+  padding: var(--space-s);
   background: var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid var(--accent);
   border-radius: var(--radius);
 }
 
-.scientific {
-  font-style: italic;
-}
-
 .charade p { font-style: italic; }
+
+.next-step h2 { font-size: 1.1rem; }
+.next-step p { margin: 0; }
+.next-step p + p { margin-top: var(--space-xs); }
+.next-step-charade { font-style: italic; }
+.next-step a { font-weight: 600; }
+
+/* Séparation nette avant les actions sensibles (réinitialisation) */
+.divider {
+  width: 100%;
+  margin: var(--space-l) 0 0;
+  border: none;
+  border-top: 2px solid var(--border);
+}
 
 .notice {
   padding: var(--space-s) var(--space-m);
@@ -230,10 +212,10 @@ main > .fresque-image { border-radius: var(--radius); }
 
 /* ---------- Carte ---------- */
 .campus-map {
-  height: clamp(320px, 60vh, 520px);
+  height: clamp(280px, 50vh, 520px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  z-index: 0; /* garde les contrôles Leaflet sous l'en-tête */
+  z-index: 0; /* isole les z-index internes de Leaflet du reste de la page */
 }
 
 .map-pin span {
@@ -273,8 +255,6 @@ main > .fresque-image { border-radius: var(--radius); }
   font-weight: 600;
   color: var(--muted);
 }
-.charade-list .solved p { color: var(--muted); }
-.charade-list .solved .answer { color: var(--primary); text-decoration: none; }
 
 /* ---------- Boutons et liens ---------- */
 .btn-danger,
@@ -305,7 +285,56 @@ main > .fresque-image { border-radius: var(--radius); }
 }
 .btn-secondary:hover { border-color: var(--muted); }
 
-.reset { align-self: flex-start; }
+.reset { align-self: center; }
+
+.zone-back {
+  margin-top: var(--space-xs);
+  padding: 0;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.zone-back:hover { text-decoration: underline; }
+
+/* Bouton principal vers le livre : couleurs du livre, pleine largeur sur mobile */
+.btn-book {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  margin-top: var(--space-s);
+  padding: 12px var(--space-m);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #f6e7c1;
+  text-decoration: none;
+  background: linear-gradient(135deg, #5e321f, #3a1d10);
+  border: 1px solid #d9b45f;
+  border-radius: var(--radius);
+  box-shadow: inset 0 0 0 3px #3a1d10, inset 0 0 0 4px rgba(217, 180, 95, 0.5), 0 4px 12px rgba(58, 29, 16, 0.25);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-book svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: #d9b45f;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.btn-book:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 0 3px #3a1d10, inset 0 0 0 4px rgba(217, 180, 95, 0.5), 0 8px 18px rgba(58, 29, 16, 0.3);
+}
+.btn-book:active { transform: none; }
 
 /* ---------- Fenêtre de confirmation ---------- */
 .dialog {
@@ -774,8 +803,8 @@ main > .fresque-image { border-radius: var(--radius); }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-s);
-  margin-top: calc(-1 * var(--space-s));
+  gap: var(--space-xs);
+  margin-top: var(--space-xs); /* laisse respirer l'ombre du livre */
 }
 .book-btn {
   width: 44px;
@@ -792,10 +821,10 @@ main > .fresque-image { border-radius: var(--radius); }
 }
 .book-btn:hover:not(:disabled) { background: #fffaf0; }
 .book-btn:disabled { opacity: 0.35; cursor: default; }
-.book-dots { display: flex; gap: 4px; }
+.book-dots { display: flex; gap: 2px; }
 .book-dot {
   min-width: 40px;
-  height: 32px;
+  height: 40px;
   padding: 0 8px;
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 1.05rem;
@@ -814,7 +843,7 @@ main > .fresque-image { border-radius: var(--radius); }
   opacity: 1;
 }
 .book-hint {
-  margin-top: calc(-1 * var(--space-m));
+  margin-top: calc(-1 * var(--space-s));
   text-align: center;
   font-size: 0.9rem;
   color: var(--muted);
@@ -859,12 +888,13 @@ main > .fresque-image { border-radius: var(--radius); }
   .page.final:not(.locked) .page-title { animation: none; }
 }
 
-/* ---------- Mobile ---------- */
-@media (max-width: 600px) {
-  header { padding: 12px var(--space-s); }
-  header nav a { padding: 4px 10px; }
-  main { padding-top: var(--space-m); gap: var(--space-m); }
-  .hint { margin-top: calc(-1 * var(--space-s)); }
-  .book-hint { margin-top: calc(-1 * var(--space-s)); }
-  .panel, .zone-info, .charade, .conclusion { padding: var(--space-s); }
+/* ---------- Tablette et ordinateur ---------- */
+@media (min-width: 601px) {
+  main { padding-top: var(--space-l); gap: var(--space-l); }
+  .hint { margin-top: calc(-1 * var(--space-m)); }
+  .book-hint { margin-top: calc(-1 * var(--space-m)); }
+  .zone-info, .next-step, .charade, .conclusion { padding: var(--space-m); }
+  .btn-book { width: auto; align-self: flex-start; display: inline-flex; }
+  .book-controls { gap: var(--space-s); margin-top: calc(-1 * var(--space-xs)); }
+  .book-dots { gap: 4px; }
 }

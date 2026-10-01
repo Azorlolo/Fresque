@@ -11,14 +11,16 @@ const fresque = getFresque(route.params.id)
 const selectedZoneId = ref(null)
 const selectedZone = computed(() => fresque.zones.find((z) => z.id === selectedZoneId.value))
 
+// Toucher de nouveau l'élément sélectionné le désélectionne (retour à l'histoire)
+function selectZone(id) {
+  selectedZoneId.value = selectedZoneId.value === id ? null : id
+}
+
 // Premier scan : la fresque passe du noir et blanc à la couleur
 const reveal = consumeReveal(fresque.id)
 
-// Choisie une fois à l'ouverture de la page (et ajoutée aux charades débloquées)
+// Révélée à l'ouverture de la page, affichée ici et sous la carte de l'accueil
 const prochaine = nextCharade()
-
-// Page du livre qui contient la partie du poème de cette fresque
-const poemePage = fresques.indexOf(fresque) + 1
 </script>
 
 <template>
@@ -29,29 +31,26 @@ const poemePage = fresques.indexOf(fresque) + 1
     interactive
     :reveal="reveal"
     :selected-zone="selectedZoneId"
-    @select="selectedZoneId = $event"
+    @select="selectZone"
   />
   <p class="hint">Touchez un élément de la fresque pour en savoir plus.</p>
 
-  <section v-if="selectedZone" class="zone-info">
-    <h3>{{ selectedZone.label }}</h3>
-    <p>{{ selectedZone.info }}</p>
+  <!-- Histoire de la fresque par défaut, remplacée par le détail de l'élément touché -->
+  <section class="zone-info">
+    <template v-if="selectedZone">
+      <h3>{{ selectedZone.label }}</h3>
+      <p>{{ selectedZone.info }}</p>
+      <button class="zone-back" @click="selectedZoneId = null">← Revenir à l'histoire</button>
+    </template>
+    <p v-else>{{ fresque.histoire }}</p>
   </section>
 
-  <section class="panel">
-    <h2 class="scientific">{{ fresque.nomScientifique }}</h2>
-    <p>{{ fresque.histoire }}</p>
-  </section>
-
-  <section class="panel">
-    <h2>{{ fresque.poeme.numero }}. {{ fresque.poeme.titre }}</h2>
-    <p>Cette fresque vous a révélé un chant du poème.</p>
-    <p><router-link :to="{ name: 'poeme', query: { page: poemePage } }">Lire « {{ fresque.poeme.sousTitre }} » →</router-link></p>
-  </section>
-
-  <section class="charade">
-    <h2>Charade</h2>
-    <p v-if="prochaine">{{ prochaine.charade }}</p>
+  <section class="next-step">
+    <h2>Prochaine étape</h2>
+    <template v-if="prochaine">
+      <p class="next-step-charade">« {{ prochaine.charade }} »</p>
+      <p><router-link :to="{ name: 'home', hash: '#carte' }">La découvrir sous la carte du campus →</router-link></p>
+    </template>
     <p v-else>
       Vous avez découvert toutes les fresques !
       <router-link :to="{ name: 'poeme', query: { page: fresques.length + 1 } }">La conclusion du poème vous attend.</router-link>

@@ -19,6 +19,6 @@ const unlocked = computed(() => isUnlocked(props.fresque.id))
   </router-link>
   <div v-else class="card locked" aria-disabled="true">
     <img class="card-thumb" :src="fresque.thumbnail.gray" alt="Fresque non découverte" />
-    <p class="card-title">🔒 À scanner</p>
+    <p class="card-title">À découvrir</p>
   </div>
 </template>

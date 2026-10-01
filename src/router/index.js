@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import FresqueView from '../views/FresqueView.vue'
-import MapView from '../views/MapView.vue'
 import PoemeView from '../views/PoemeView.vue'
 import { getFresque } from '../data/fresques'
 import { isUnlocked, unlock } from '../store/progress'
@@ -11,7 +10,8 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: '/', name: 'home', component: HomeView },
-    { path: '/carte', name: 'carte', component: MapView },
+    // Ancienne page carte : elle est maintenant sur l'accueil
+    { path: '/carte', redirect: { name: 'home', hash: '#carte' } },
     { path: '/poeme', name: 'poeme', component: PoemeView },
     {
       path: '/fresque/:id',
@@ -33,6 +33,10 @@ const router = createRouter({
     },
     { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
+  // Lien vers une section (#carte) : on défile jusqu'à elle, sinon retour en haut de page
+  scrollBehavior(to) {
+    return to.hash ? { el: to.hash, behavior: 'smooth' } : { top: 0 }
+  },
 })
 
 export default router

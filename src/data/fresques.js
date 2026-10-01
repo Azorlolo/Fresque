@@ -8,11 +8,11 @@
 //                affichée dans son format d'origine, sans recadrage, pour que les zones restent alignées
 //  - thumbnail : vignettes de l'accueil dans /public, { color, gray } (gray = fresque pas encore scannée)
 //  - theme     : couleurs de la page de la fresque
-//                  primary : titres, en-tête, liens
+//                  primary : titres, liens
 //                  accent  : touches de couleur (bordures, zone sélectionnée)
 //                  bg      : fond de page
 //                  text    : couleur du texte
-//  - nomScientifique, histoire : fiche détail de la fresque
+//  - histoire : fiche détail de la fresque (nomScientifique n'est plus affiché)
 //  - zones     : éléments cliquables sur la fresque, positions en % de l'image
 //  - charade   : énigme qui mène À CETTE fresque (affichée sur les autres fresques)
 //  - position  : [latitude, longitude] de la fresque sur le campus (affichée sur la carte une fois scannée)
@@ -127,7 +127,7 @@ export const defaultTheme = { primary: '#2b2b2b', accent: '#7a7a7a', bg: '#f6f5f
 export const campus = {
   nom: 'Université de la Nouvelle-Calédonie – Bibliotheque unversitaire',
   centre: [-22.262686818338413, 166.40498567733079],
-  zoom: 20,
+  zoom: 18,
 }
 
 // Thème de la page poème

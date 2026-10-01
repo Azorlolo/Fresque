@@ -19,7 +19,7 @@ Chaque QRCodes mènent à une page qui répertorie la fresque scannée.
 Les autres fresques ne sont pas accessible via le site (lien bloquée tant que la fresque n'est pas scannée) 
 Chaque fresque numérique est décomposer et l'utilisateur peut cliquer sur un élément de cette fresque pour obtenir des informations
 
-Une petite charade est en dessous de chaque fresque pour diriger l'utilisateur vers une fresque aléatoire qu'il n'as pas scannée
+Chaque scan révèle, sous la carte du campus, une petite charade pour diriger l'utilisateur vers une fresque aléatoire qu'il n'as pas scannée
 
 ## ✨ Fonctionnalités
 
@@ -31,7 +31,7 @@ Une petite charade est en dessous de chaque fresque pour diriger l'utilisateur v
 - [x] Charade vers une fresque non scannée aléatoire
 - [x] Déverrouillage de la conclusion une fois toutes les fresques scannées
 - [x] Sauvegarde de la progression de l'utilisateur (localStorage)
-- [x] Carte interactive du campus (UNC, Nouville) avec les fresques scannées + liste des charades débloquées
+- [x] Carte interactive du campus (UNC, Nouville) avec les fresques scannées + charade en cours
 
 ## 🛠️ Stack technique
 
@@ -105,9 +105,8 @@ Les ids et jetons sont lus dans `src/data/fresques.js`. Un QR code par fresque e
     ├── data/fresques.js        → TOUS les contenus (fresques, zones, histoire, charades, conclusion)
     ├── store/progress.js       → progression (état réactif + localStorage)
     ├── router/index.js         → routes + déblocage via jeton
-    ├── views/HomeView.vue      → liste des fresques + conclusion
-    ├── views/FresqueView.vue   → fresque, zones cliquables, détail, charade
-    ├── views/MapView.vue       → carte du campus + charades débloquées
+    ├── views/HomeView.vue      → fresques, lien du livre, carte du campus + charade en cours
+    ├── views/FresqueView.vue   → fresque, zones cliquables, détail, prochaine étape
     └── components/
         ├── CampusMap.vue       → carte Leaflet (repères des fresques scannées)
         ├── FresqueCard.vue     → carte grisée / dégrisée
