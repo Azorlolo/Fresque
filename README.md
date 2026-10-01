@@ -75,7 +75,7 @@ Liens actuels (remplacer `<site>` par l'adresse d'hébergement) :
 |---|---|---|
 | 1 | La Tortue | `https://<site>/#/fresque/tortue?k=t7k2p9` |
 | 2 | L'Hibiscus | `https://<site>/#/fresque/hibiscus?k=h5w2q8` |
-| 3 | La Perruche | `https://<site>/#/fresque/perruche?k=p3j7d4` |
+| 3 | Le Loriquet | `https://<site>/#/fresque/loriquet?k=p3j7d4` |
 
 En local (`npm run dev`) : `http://localhost:5173/#/fresque/tortue?k=t7k2p9`, etc. Pour tester sur téléphone, remplacer `localhost` par l'IP affichée au démarrage.
 

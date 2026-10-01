@@ -877,6 +877,10 @@ main > .fresque-image { border-radius: var(--radius); }
   font-size: 0.9rem;
   color: var(--muted);
 }
+.book-back {
+  align-self: center;
+  text-decoration: none;
+}
 
 /* Grand écran : livre ouvert en double page, centré quand il est fermé */
 @media (min-width: 900px) {

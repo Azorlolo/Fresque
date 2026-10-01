@@ -339,4 +339,5 @@ onBeforeUnmount(() => {
   <p class="book-hint">
     {{ current === 0 ? "Touchez la couverture pour ouvrir le livre." : "Glissez la page du doigt ou touchez son bord pour la tourner." }}
   </p>
+  <router-link to="/" class="btn-secondary book-back">← Revenir aux fresques</router-link>
 </template>

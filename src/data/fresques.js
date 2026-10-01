@@ -163,16 +163,16 @@ export const fresques = [
     },
   },
   {
-    id: 'perruche',
-    titre: 'La Perruche',
+    id: 'loriquet',
+    titre: 'Le Loriquet',
     token: 'p3j7d4',
     position: [-22.263146189118988, 166.4045984387007], // à ajuster sur place
-    image: 'fresques/perruche.jpg',
+    image: 'fresques/loriquet.jpg',
     ambiance: 'ciel',
-    thumbnail: { color: 'thumbs/perruche.jpg', gray: 'thumbs/perruche-gris.jpg' },
+    thumbnail: { color: 'thumbs/loriquet.jpg', gray: 'thumbs/loriquet-gris.jpg' },
     theme: { primary: '#2f6b2a', accent: '#d9a91a', bg: '#f1f6ee', text: '#1f2e1c' },
     nomScientifique: 'Trichoglossus haematodus deplanchii', // loriquet à tête bleue de Nouvelle-Calédonie
-    histoire: 'Dans la forêt, deux perruches observaient le monde...',
+    histoire: 'Dans la forêt, deux loriquets observaient le monde...',
     zones: [
       // Références vérifiées : ChemistryViews 2024 et Arbore et al. 2024 (Science, enzyme ALDH3A2) ;
       // Prum et al. 1999 (Proc. R. Soc. B) ; Shawkey et al. 2006 (J. R. Soc. Interface, couche basale de mélanine) ;
@@ -220,14 +220,14 @@ export const fresques = [
     poeme: {
       numero: 'III',
       titre: 'Le Ciel',
-      sousTitre: "L'envol et la perruche",
+      sousTitre: "L'envol et le loriquet",
       vers: [
         "Ce présent fut porté par l'oiseau de lumière,",
-        'Une perruche vive aux plumes printanières.',
-        "Messagère d'azur, d'émeraude et d'argent,",
-        "Elle a fendu les airs d'un battement changeant",
+        'Un loriquet vif aux plumes printanières.',
+        "Ce messager d'azur, d'émeraude et d'argent,",
+        "Il a fendu les airs d'un battement changeant",
         "Pour livrer cette fleur au peuple de l'abîme.",
-        'En la voyant planer au-dessus de la cime,',
+        'En le voyant planer au-dessus de la cime,',
         "La tortue s'émerveille et se prend à rêver :",
         "Elle veut déchirer l'écume et s'élever.",
         "Car pour elle désormais, le ciel n'est qu'une mer,",

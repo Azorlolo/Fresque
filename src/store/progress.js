@@ -9,12 +9,10 @@ const STORAGE_KEY = 'fresque-progress'
 function load() {
   try {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY))
-    // Ancien format : simple liste des fresques scannées
-    if (Array.isArray(data)) return { scanned: data, charades: [] }
-    const scanned = Array.isArray(data?.scanned) ? data.scanned : []
-    const charades = Array.isArray(data?.charades) ? data.charades : []
-    // Ancien format : les charades résolues restaient dans la liste
-    return { scanned, charades: charades.filter((id) => !scanned.includes(id)) }
+    return {
+      scanned: Array.isArray(data?.scanned) ? data.scanned : [],
+      charades: Array.isArray(data?.charades) ? data.charades : [],
+    }
   } catch {
     return { scanned: [], charades: [] }
   }

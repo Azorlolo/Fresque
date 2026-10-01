@@ -6,7 +6,7 @@
 // Ambiances (en boucle, en fondu enchaîné d'une page à l'autre) :
 //  - mer   : vagues et bulles (la Tortue)
 //  - terre : jardin tropical, fichier public/sons/Tropical.mp3 en boucle (l'Hibiscus)
-//  - ciel  : vent en altitude et piaillements de perruches (la Perruche)
+//  - ciel  : vent en altitude et piaillements de loriquets (le Loriquet)
 //  - livre : feu de cheminée, fichier public/sons/Fireplace.mp3 en boucle (le Poème)
 // Bruitages : page qui tourne, bombe de peinture aérosol (premier scan), toucher d'un élément de la fresque.
 // Le bruit de page vient du fichier public/sons/Page-Flip.mp3, la bombe de peinture de Shake-Spray.mp3
@@ -273,7 +273,7 @@ const ambiances = {
     every(7000, 15000, () => distantBird(out, ctx.currentTime), scope)
   },
 
-  // Vent en altitude et perruches qui bavardent
+  // Vent en altitude et loriquets qui bavardent
   ciel(out, scope) {
     const vent = noiseSource('pink')
     const ventFilter = filter('bandpass', 1100, 1.2)
@@ -350,7 +350,7 @@ function distantBird(out, t) {
   })
 }
 
-// Cri de perruche : note aiguë qui glisse, rendue rauque par une modulation rapide
+// Cri de loriquet : note aiguë qui glisse, rendue rauque par une modulation rapide
 function parakeet(out, t) {
   const dur = rand(0.06, 0.14)
   const osc = ctx.createOscillator()
