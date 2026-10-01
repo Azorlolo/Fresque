@@ -1,6 +1,6 @@
 // Progression de l'utilisateur, sauvegardée en localStorage :
 //  - scanned  : fresques scannées
-//  - charades : fresques dont la charade a été révélée à l'utilisateur
+//  - charades : fresques dont la charade a été révélée à l'utilisateur et pas encore résolue
 import { reactive, computed, watch } from 'vue'
 import { fresques } from '../data/fresques'
 
@@ -11,10 +11,10 @@ function load() {
     const data = JSON.parse(localStorage.getItem(STORAGE_KEY))
     // Ancien format : simple liste des fresques scannées
     if (Array.isArray(data)) return { scanned: data, charades: [] }
-    return {
-      scanned: Array.isArray(data?.scanned) ? data.scanned : [],
-      charades: Array.isArray(data?.charades) ? data.charades : [],
-    }
+    const scanned = Array.isArray(data?.scanned) ? data.scanned : []
+    const charades = Array.isArray(data?.charades) ? data.charades : []
+    // Ancien format : les charades résolues restaient dans la liste
+    return { scanned, charades: charades.filter((id) => !scanned.includes(id)) }
   } catch {
     return { scanned: [], charades: [] }
   }
@@ -45,6 +45,9 @@ export function unlock(id) {
   if (!isUnlocked(id)) {
     state.scanned.push(id)
     pendingReveal = id
+    // La charade qui menait à cette fresque est résolue : on la retire
+    const i = state.charades.indexOf(id)
+    if (i !== -1) state.charades.splice(i, 1)
   }
 }
 
@@ -63,19 +66,19 @@ export function reset() {
 export const unlockedCount = computed(() => state.scanned.length)
 export const allUnlocked = computed(() => fresques.every((f) => state.scanned.includes(f.id)))
 
-// Fresques scannées, dans l'ordre des données (pour la carte)
+// Fresques scannées, dans l'ordre des données (pour la carte de l'accueil)
 export const unlockedFresques = computed(() => fresques.filter((f) => isUnlocked(f.id)))
 
-// Charades révélées, dans l'ordre où l'utilisateur les a obtenues
+// Charades révélées et pas encore résolues (affichées sous la carte de l'accueil)
 export const revealedCharades = computed(() =>
   state.charades.map((id) => fresques.find((f) => f.id === id)).filter(Boolean),
 )
 
-// Charade à afficher sous une fresque : on reprend une charade déjà révélée et pas encore
-// résolue, sinon on en révèle une nouvelle vers une fresque non scannée au hasard.
+// Appelée à l'ouverture d'une fresque : on garde la charade en cours s'il y en a une,
+// sinon on en révèle une nouvelle vers une fresque non scannée au hasard.
 // Renvoie null si tout est débloqué.
 export function nextCharade() {
-  const pending = revealedCharades.value.find((f) => !isUnlocked(f.id))
+  const pending = revealedCharades.value[0]
   if (pending) return pending
 
   const locked = fresques.filter((f) => !isUnlocked(f.id))

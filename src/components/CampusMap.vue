@@ -38,7 +38,11 @@ function drawMarkers() {
 }
 
 onMounted(() => {
-  map = L.map(container.value, { scrollWheelZoom: false }).setView(campus.centre, campus.zoom)
+  map = L.map(container.value, {
+    scrollWheelZoom: false,
+    // Sur mobile, glisser un doigt fait défiler la page (la carte se déplace en pinçant à deux doigts)
+    dragging: !L.Browser.mobile,
+  }).setView(campus.centre, campus.zoom)
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',

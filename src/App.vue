@@ -19,14 +19,6 @@ const themeVars = computed(() => {
 
 <template>
   <div class="app" :style="themeVars">
-    <header>
-      <router-link to="/" class="brand">Fresque Interactive</router-link>
-      <nav>
-        <router-link to="/" exact-active-class="active">Fresques</router-link>
-        <router-link to="/poeme" active-class="active">Poème</router-link>
-        <router-link to="/carte" active-class="active">Carte</router-link>
-      </nav>
-    </header>
     <main :class="{ wide: route.name === 'poeme' }">
       <router-view :key="$route.fullPath" />
     </main>
