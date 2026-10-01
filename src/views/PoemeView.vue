@@ -186,7 +186,13 @@ onBeforeUnmount(() => {
   </div>
 
   <!-- Mobile uniquement : une seule page tient à l'écran -->
-  <button v-if="current > 0" class="book-side" :aria-pressed="showLeft" @click="showLeft = !showLeft">
+  <!-- Toujours présent (caché sur la couverture) : le livre ne se décale pas quand on l'ouvre -->
+  <button
+    class="book-side"
+    :class="{ hidden: current === 0 }"
+    :aria-pressed="showLeft"
+    @click="showLeft = !showLeft"
+  >
     {{ showLeft ? 'Revenir à la page →' : '← Voir la page de gauche' }}
   </button>
 

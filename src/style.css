@@ -427,6 +427,7 @@ main > .fresque-image { border-radius: var(--radius); }
   cursor: pointer;
 }
 .book-side:hover { background: #fffaf0; }
+.book-side.hidden { visibility: hidden; }
 .book {
   position: relative;
   aspect-ratio: 3 / 5;
