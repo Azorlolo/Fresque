@@ -41,7 +41,22 @@ const prochaine = nextCharade()
   <section class="zone-info">
     <template v-if="selectedZone">
       <h3>{{ selectedZone.label }}</h3>
+      <p v-if="selectedZone.sousTitre" class="zone-sous-titre">{{ selectedZone.sousTitre }}</p>
       <p>{{ selectedZone.info }}</p>
+      <ul v-if="selectedZone.faits" class="zone-faits">
+        <li v-for="fait in selectedZone.faits" :key="fait.texte ?? fait">
+          <template v-if="fait.titre"><strong>{{ fait.titre }}</strong> {{ fait.texte }}</template>
+          <template v-else>{{ fait }}</template>
+        </li>
+      </ul>
+      <div v-if="selectedZone.liens" class="zone-liens">
+        <p>Pour aller plus loin :</p>
+        <ul>
+          <li v-for="lien in selectedZone.liens" :key="lien.url">
+            <a :href="lien.url" target="_blank" rel="noopener">{{ lien.label }}</a>
+          </li>
+        </ul>
+      </div>
       <button class="zone-back" @click="selectedZoneId = null">← Revenir à l'histoire</button>
     </template>
     <p v-else>{{ fresque.histoire }}</p>

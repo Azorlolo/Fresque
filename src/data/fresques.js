@@ -14,6 +14,11 @@
 //                  text    : couleur du texte
 //  - histoire : fiche détail de la fresque (nomScientifique n'est plus affiché)
 //  - zones     : éléments cliquables sur la fresque, positions en % de l'image
+//                  sousTitre : précision sous le titre de la zone, ex. l'espèce (optionnel)
+//                  info  : phrase d'introduction affichée quand on touche la zone
+//                  faits : faits scientifiques détaillés, affichés en liste sous l'introduction
+//                          (texte simple, ou { titre, texte } pour un début de phrase en gras)
+//                  liens : pages « Pour aller plus loin », { label, url } (Wikipédia en français uniquement)
 //  - charade   : énigme qui mène À CETTE fresque (affichée sur les autres fresques)
 //  - position  : [latitude, longitude] de la fresque sur le campus (affichée sur la carte une fois scannée)
 //  - poeme     : partie du poème révélée par cette fresque (une page du livre sur #/poeme)
@@ -32,8 +37,45 @@ export const fresques = [
     nomScientifique: 'Chelonia mydas',
     histoire: "Il était une fois une tortue qui traversait l'océan...",
     zones: [
-      { id: 'carapace', label: 'Carapace', x: 5, y: 10, w: 28, h: 42, info: 'La carapace est faite de kératine, une protéine.' },
-      { id: 'molecule', label: 'Molécule de kératine', x: 86, y: 61, w: 14, h: 24, info: 'Molécule de kératine, protéine de la carapace.' },
+      // Références vérifiées : Rhee et al. 2009 (Mater. Sci. Eng. C) ; Pei et al. 2022 (Biomimetics) ;
+      // Lezcano, Wyneken & Porter 2025 (J. Exp. Biol.) ; Dalla Valle et al. 2009 ; Alibardi 2014 et 2016 ;
+      // Wang et al. 2016 (Prog. Mater. Sci.) ; Wikipédia « Carapace de tortue », « Tortue verte » ; FAO
+      {
+        id: 'carapace',
+        label: 'Carapace',
+        x: 5, y: 10, w: 28, h: 42,
+        info: "La carapace est un bouclier vivant : des os soudés, recouverts de grandes écailles cornées faites de kératine et de protéines proches, la même famille de matériaux que nos ongles.",
+        faits: [
+          { titre: "Dessous, c'est du squelette.", texte: "Sur le dessus (la dossière), les côtes et la colonne vertébrale s'élargissent et fusionnent avec des plaques osseuses de la peau. Une tortue ne peut donc jamais sortir de sa carapace." },
+          { titre: 'Un os en « sandwich ».', texte: "L'os de la carapace est fait de deux couches denses autour d'un cœur spongieux et léger. Résultat : c'est solide sans être trop lourd. Chez les tortues marines, cet os est même moins rigide que chez les tortues d'eau douce ou terrestres (Lezcano et al., 2025)." },
+          { titre: 'Des écailles décalées.', texte: "Les écailles cornées ne sont pas alignées sur les plaques osseuses : les jointures des os tombent au milieu des écailles du dessus. Leurs bords sont donc décalés, comme les briques d'un mur, ce qui évite les points faibles." },
+          { titre: 'Une matière en deux ingrédients.', texte: "Chez les tortues à carapace dure, les écailles contiennent surtout des protéines cornées bêta (anciennement appelées « kératine β »), mêlées à de la kératine α. C'est ce mélange qui les rend dures (Dalla Valle et al., 2009)." },
+          { titre: 'Des écailles qui grandissent.', texte: "Les écailles grandissent avec la tortue. Les tortues terrestres ajoutent des couches à la base de chaque écaille, alors que les tortues aquatiques perdent et renouvellent les leurs." },
+          { titre: 'La tortue verte.', texte: "La tortue verte (Chelonia mydas) ne doit pas son nom à sa carapace, plutôt olive à brune. Elle le doit à sa graisse verdâtre, liée à son régime d'herbiers marins et d'algues." },
+        ],
+        liens: [
+          { label: 'Carapace de tortue', url: 'https://fr.wikipedia.org/wiki/Carapace_de_tortue' },
+          { label: 'Tortue verte', url: 'https://fr.wikipedia.org/wiki/Tortue_verte' },
+          { label: 'Os spongieux', url: 'https://fr.wikipedia.org/wiki/Os_spongieux' },
+        ],
+      },
+      {
+        id: 'molecule',
+        label: 'Molécule de kératine',
+        x: 86, y: 61, w: 14, h: 24,
+        info: "La kératine est une protéine : une très longue chaîne d'acides aminés, accrochés les uns aux autres comme les perles d'un collier.",
+        faits: [
+          { titre: 'Deux formes.', texte: "On distingue souvent la kératine α, enroulée en hélice (cheveux, ongles, laine), et la kératine dite « β », repliée en feuillets plats (écailles des reptiles, becs et plumes des oiseaux). En réalité, la « kératine β » n'est pas une vraie kératine : les scientifiques l'appellent aujourd'hui protéine cornée bêta. Elle travaille en équipe avec la kératine α, que les reptiles et les oiseaux possèdent aussi (Alibardi, 2016)." },
+          { titre: 'Un empilement à plusieurs échelles.', texte: "Les chaînes s'assemblent en filaments, puis en fibres, puis en tissus. C'est cet empilement qui rend les écailles si résistantes (Wang et al., 2016)." },
+          { titre: 'Des ponts soufrés.', texte: "Les kératines sont riches en soufre : des ponts disulfure relient les chaînes entre elles et les rigidifient. C'est ce soufre qui donne leur odeur aux cheveux et aux plumes brûlés." },
+          { titre: "Insoluble dans l'eau.", texte: "La kératine est insoluble dans l'eau : idéal pour une armure qui reste souvent au contact de l'eau. Petite exception : la tortue luth, une tortue marine, n'a pas d'écailles cornées. Sa carapace est couverte d'une peau épaisse." },
+        ],
+        liens: [
+          { label: 'Kératine', url: 'https://fr.wikipedia.org/wiki/K%C3%A9ratine' },
+          { label: 'Pont disulfure', url: 'https://fr.wikipedia.org/wiki/Pont_disulfure' },
+          { label: 'Tortue luth', url: 'https://fr.wikipedia.org/wiki/Tortue_luth' },
+        ],
+      },
     ],
     charade: 'Mon premier est un fruit sec... Mon tout nage lentement dans le lagon.',
     poeme: {
@@ -66,8 +108,40 @@ export const fresques = [
     nomScientifique: 'Hibiscus rosa-sinensis',
     histoire: 'Sur la terre, les fleurs rouges éclataient de couleur...',
     zones: [
-      { id: 'fleur', label: 'Fleur rouge', x: 57, y: 46, w: 27, h: 54, info: 'Le rouge des pétales vient de la cyanidine.' },
-      { id: 'molecule', label: 'Molécule de cyanidine', x: 83, y: 73, w: 16, h: 20, info: 'Molécule de cyanidine, pigment du pétale.' },
+      // Références vérifiées : Mejía et al. 2023 (Molecules, cultivars d'H. rosa-sinensis) ;
+      // Wikipédia « Hibiscus rosa-sinensis », « Cyanidine » (E163a) ; manuel NCERT (indicateur « China rose »)
+      {
+        id: 'fleur',
+        label: 'Fleur rouge',
+        x: 57, y: 46, w: 27, h: 54,
+        info: "Le rouge éclatant de l'hibiscus vient d'un pigment dissous dans les cellules des pétales : la cyanidine, de la famille des anthocyanes.",
+        faits: [
+          { titre: 'Un pigment presque unique.', texte: "Chez l'hibiscus, la cyanidine est accrochée à deux sucres : on l'appelle cyanidine-3-sophoroside. C'est le principal pigment rouge de la fleur, d'où sa couleur si régulière (Mejía et al., 2023)." },
+          { titre: 'Du blanc au rouge.', texte: "On le trouve dans les fleurs lilas, roses, orange et rouges, mais pas dans les hibiscus blancs ou jaunes. C'est sa quantité qui fait passer la fleur du rose pâle au rouge vif." },
+          { titre: 'Une fleur antioxydante.', texte: "Plus une fleur est rouge, plus elle est antioxydante : les chercheurs ont mesuré une activité environ deux fois et demie plus forte chez un hibiscus rouge que chez un blanc." },
+          { titre: 'La plante à cirer les chaussures.', texte: "En Inde, au Sri Lanka, en Malaisie ou en Polynésie, ses pétales écrasés donnent un jus noir qui servait de cirage. En anglais, on la surnomme d'ailleurs « shoeblackplant »." },
+        ],
+        liens: [
+          { label: 'Hibiscus rosa-sinensis', url: 'https://fr.wikipedia.org/wiki/Hibiscus_rosa-sinensis' },
+          { label: 'Anthocyane', url: 'https://fr.wikipedia.org/wiki/Anthocyane' },
+        ],
+      },
+      {
+        id: 'molecule',
+        label: 'Molécule de cyanidine',
+        x: 83, y: 73, w: 16, h: 20,
+        info: "La cyanidine est faite de trois anneaux d'atomes, surtout de carbone, décorés de groupes « OH ». Le petit « + » sur l'oxygène, visible sur la fresque, est la clé de sa couleur.",
+        faits: [
+          { titre: 'Une molécule chargée.', texte: "En milieu acide, comme dans les pétales, la cyanidine porte une charge positive : on l'appelle alors cation flavylium. Sous cette forme, elle absorbe surtout la lumière verte, et notre œil perçoit le rouge." },
+          { titre: 'Un indicateur de pH naturel.', texte: "Quand le pH change, la molécule se transforme et change de couleur : rose à rouge en milieu acide, violette vers la neutralité, puis bleue et verte en milieu basique. Un extrait de pétales d'hibiscus vire au rose foncé avec du citron et au vert avec une base : c'est une expérience classique de cours de chimie." },
+          { titre: 'Une molécule très répandue.', texte: "On retrouve la cyanidine dans le chou rouge, les mûres, les cerises ou les framboises." },
+          { titre: 'Un colorant alimentaire.', texte: "Les anthocyanes servent de colorant alimentaire naturel : sur les emballages, elles portent le code E163." },
+        ],
+        liens: [
+          { label: 'Cyanidine', url: 'https://fr.wikipedia.org/wiki/Cyanidine' },
+          { label: 'Indicateur de pH', url: 'https://fr.wikipedia.org/wiki/Indicateur_de_pH' },
+        ],
+      },
     ],
     charade: 'Je suis une fleur rouge que l’on glisse derrière l’oreille.',
     poeme: {
@@ -97,11 +171,50 @@ export const fresques = [
     ambiance: 'ciel',
     thumbnail: { color: 'thumbs/perruche.jpg', gray: 'thumbs/perruche-gris.jpg' },
     theme: { primary: '#2f6b2a', accent: '#d9a91a', bg: '#f1f6ee', text: '#1f2e1c' },
-    nomScientifique: 'Cyanoramphus saisseti', // à vérifier avec l'espèce peinte
+    nomScientifique: 'Trichoglossus haematodus deplanchii', // loriquet à tête bleue de Nouvelle-Calédonie
     histoire: 'Dans la forêt, deux perruches observaient le monde...',
     zones: [
-      { id: 'plumes', label: 'Plumage', x: 26, y: 1, w: 41, h: 57, info: 'Les couleurs des plumes viennent de la mélanine et des caroténoïdes.' },
-      { id: 'molecule', label: 'Molécule de mélanine', x: 41, y: 74, w: 13, h: 25, info: 'Mélanine et caroténoïdes, pigments de plume.' },
+      // Références vérifiées : ChemistryViews 2024 et Arbore et al. 2024 (Science, enzyme ALDH3A2) ;
+      // Prum et al. 1999 (Proc. R. Soc. B) ; Shawkey et al. 2006 (J. R. Soc. Interface, couche basale de mélanine) ;
+      // Shawkey & Hill 2006 (J. Exp. Biol., geai sans mélanine) ; Bonser 1995 (The Condor, dureté des plumes)
+      {
+        id: 'plumes',
+        label: 'Plumage',
+        sousTitre: 'Loriquet à tête bleue de Nouvelle-Calédonie (Trichoglossus haematodus deplanchii)',
+        x: 26, y: 1, w: 41, h: 57,
+        info: "Le plumage du loriquet combine deux sources de couleur : des pigments, qui absorbent une partie de la lumière, et des structures microscopiques, qui la renvoient.",
+        faits: [
+          { titre: "Des pigments maison.", texte: "Le rouge de sa poitrine et le jaune de son collier viennent des psittacofulvines, des pigments qu'on ne trouve que chez les perroquets. Ils ressemblent chimiquement aux caroténoïdes (une longue chaîne d'atomes de carbone). Mais contrairement aux caroténoïdes des autres oiseaux, comme le flamant ou le canari, ils ne viennent pas de la nourriture : l'oiseau les fabrique lui-même (ChemistryViews, 2024)." },
+          { titre: "La mélanine, pigment sombre.", texte: "La mélanine colore les zones sombres du plumage. Sous les plumes bleues, elle forme aussi un fond noir qui absorbe la lumière non renvoyée et rend le bleu plus vif (Shawkey et al., 2006)." },
+          { titre: "Un bleu fait de lumière.", texte: "Le bleu de sa tête n'est pas un pigment : c'est une couleur structurelle. À l'intérieur de la plume, une « éponge » de kératine et de minuscules bulles d'air renvoie surtout la lumière bleue (Prum et al., 1999)." },
+          { titre: "Pas de pigment vert.", texte: "Son dos, ses ailes et son ventre sont verts, et pourtant aucun pigment vert n'existe dans ses plumes ! Le vert est un mélange : du bleu structurel filtré par un pigment jaune." },
+          { titre: "Une enzyme pour passer du rouge au jaune.", texte: "En 2024, des chercheurs ont découvert chez les perroquets qu'une enzyme, ALDH3A2, transforme les psittacofulvines rouges en psittacofulvines jaunes. Plus la plume en contient, plus elle tire vers le jaune, ou vers le vert quand ce jaune se mélange au bleu structurel (Arbore et al., 2024)." },
+        ],
+        liens: [
+          { label: 'Loriquet à tête bleue', url: 'https://fr.wikipedia.org/wiki/Loriquet_%C3%A0_t%C3%AAte_bleue' },
+          { label: 'Psittacofulvine', url: 'https://fr.wikipedia.org/wiki/Psittacofulvine' },
+          { label: 'Couleur structurelle', url: 'https://fr.wikipedia.org/wiki/Couleur_structurelle' },
+          { label: 'Mélanine', url: 'https://fr.wikipedia.org/wiki/M%C3%A9lanine' },
+          { label: 'Plume', url: 'https://fr.wikipedia.org/wiki/Plume' },
+        ],
+      },
+      {
+        id: 'molecule',
+        label: 'Molécule de mélanine',
+        x: 41, y: 74, w: 13, h: 25,
+        info: "La mélanine est le pigment sombre du vivant : c'est elle qui colore aussi notre peau, nos cheveux et nos yeux. Elle est fabriquée par des cellules spécialisées à partir d'un acide aminé, la tyrosine.",
+        faits: [
+          { titre: "Des briques en anneaux.", texte: "Il existe deux grandes formes de mélanine : l'eumélanine, noire ou brune, et la phéomélanine, jaune à rouge. Celle de la fresque est l'eumélanine. Elle est faite de petites briques en forme d'anneaux (des indoles) reliées en chaînes. Ces chaînes absorbent presque toutes les couleurs de la lumière : d'où le noir et le brun." },
+          { titre: "Un fond noir sous le bleu.", texte: "Dans une plume bleue ou verte, une rangée de grains de mélanine tapisse le fond de l'« éponge » de kératine qui crée la couleur structurelle (Shawkey et al., 2006). Elle absorbe la lumière blanche que l'éponge ne renvoie pas, ce qui rend le bleu plus pur et plus éclatant." },
+          { titre: "Comme le tableau derrière la craie.", texte: "Sans cette couche sombre, le bleu ressort mal. Chez les oiseaux qui ne fabriquent pas de mélanine, les plumes normalement bleues paraissent pâles et délavées (Shawkey et Hill, 2006)." },
+          { titre: "Des plumes plus dures.", texte: "Les plumes riches en mélanine sont plus dures, ce qui les aiderait à mieux résister à l'usure (Bonser, 1995)." },
+        ],
+        liens: [
+          { label: 'Mélanine', url: 'https://fr.wikipedia.org/wiki/M%C3%A9lanine' },
+          { label: 'Couleur structurelle', url: 'https://fr.wikipedia.org/wiki/Couleur_structurelle' },
+          { label: 'Plumage', url: 'https://fr.wikipedia.org/wiki/Plumage' },
+        ],
+      },
     ],
     charade: 'Vert de la tête à la queue, je bavarde dans les arbres.',
     poeme: {

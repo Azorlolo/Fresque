@@ -287,6 +287,34 @@ main > .fresque-image { border-radius: var(--radius); }
 
 .reset { align-self: center; }
 
+.zone-sous-titre {
+  margin-top: 0;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.zone-faits {
+  margin: var(--space-xs) 0 0;
+  padding-left: 1.2em;
+  line-height: 1.5;
+}
+.zone-faits li + li { margin-top: var(--space-xs); }
+.zone-faits li::marker { color: var(--accent); }
+
+.zone-liens {
+  margin-top: var(--space-s);
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.zone-liens p { margin: 0; }
+.zone-liens ul {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.zone-liens li + li { margin-top: 4px; }
+.zone-liens a { color: var(--primary); font-weight: 600; }
+
 .zone-back {
   margin-top: var(--space-xs);
   padding: 0;
