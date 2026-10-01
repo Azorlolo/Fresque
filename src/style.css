@@ -1,60 +1,247 @@
+/* ---------- Variables ----------
+   --primary, --accent, --bg, --text sont définies par fresque dans App.vue
+   (voir `theme` dans src/data/fresques.js). */
+:root {
+  --surface: #ffffff;
+  --border: rgba(0, 0, 0, 0.08);
+  --muted: rgba(0, 0, 0, 0.55);
+  --radius: 10px;
+  --space-xs: 8px;
+  --space-s: 16px;
+  --space-m: 24px;
+  --space-l: 40px;
+  --space-xl: 64px;
+}
+
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
-  color: #222;
-  background: #fafafa;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-header {
-  padding: 12px 16px;
-  background: #222;
+.app {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s, color 0.3s;
 }
-header a { color: #fff; text-decoration: none; font-weight: bold; }
+
+/* ---------- En-tête ---------- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-s);
+  padding: var(--space-s) var(--space-m);
+  background: var(--primary);
+  transition: background-color 0.3s;
+}
+header a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
 
 main {
-  max-width: 900px;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 16px;
+  padding: var(--space-l) var(--space-s) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
+}
+
+/* ---------- Typographie ---------- */
+h1, h2, h3 { margin: 0 0 var(--space-xs); line-height: 1.25; color: var(--primary); }
+h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+p { margin: 0; }
+p + p { margin-top: var(--space-xs); }
+
+a { color: var(--primary); }
+
+/* ---------- Accueil ---------- */
+.progress {
+  font-size: 1.05rem;
+  color: var(--muted);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-m);
 }
 
 .card {
   display: block;
+  overflow: hidden;
   color: inherit;
   text-decoration: none;
-  border: 1px solid #ddd;
-  background: #fff;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom: 4px solid var(--card-color, var(--border));
+  border-radius: var(--radius);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-.card p { margin: 8px; }
-.card.locked { filter: grayscale(1); opacity: 0.5; cursor: not-allowed; }
+.card:not(.locked):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+.card-title {
+  padding: var(--space-s);
+  font-weight: 600;
+}
+.card.locked {
+  filter: grayscale(1);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 
+/* ---------- Image de fresque ---------- */
 .fresque-image {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
-.fresque-image img { width: 100%; height: 100%; object-fit: cover; }
-.fresque-image .placeholder { color: #fff; font-size: 1.5rem; }
+main > .fresque-image { border-radius: var(--radius); }
+.fresque-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fresque-image .placeholder {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
 
 .zone {
   position: absolute;
-  border: 2px dashed rgba(255, 255, 255, 0.8);
+  padding: 0;
+  border: 2px dashed rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
   background: transparent;
   cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
 }
-.zone.selected { background: rgba(255, 255, 255, 0.3); border-style: solid; }
+.zone:hover { background: rgba(255, 255, 255, 0.15); }
+.zone.selected {
+  border: 3px solid var(--accent);
+  background: rgba(255, 255, 255, 0.2);
+}
 
-.hint { font-size: 0.9rem; color: #666; }
-.notice { padding: 8px 12px; background: #fff3cd; border: 1px solid #e6c65c; }
-.zone-info, .charade, .conclusion { padding: 8px 16px; background: #fff; border: 1px solid #ddd; margin: 16px 0; }
-.reset { margin-top: 16px; }
+.hint {
+  margin-top: calc(-1 * var(--space-m));
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ---------- Blocs de contenu ---------- */
+.panel,
+.zone-info,
+.charade,
+.conclusion {
+  padding: var(--space-m);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+}
+
+.scientific {
+  font-style: italic;
+}
+
+.charade p { font-style: italic; }
+
+.notice {
+  padding: var(--space-s) var(--space-m);
+  background: #fff6db;
+  border: 1px solid #ecd48a;
+  border-radius: var(--radius);
+}
+
+/* ---------- Carte ---------- */
+.campus-map {
+  height: clamp(320px, 60vh, 520px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  z-index: 0; /* garde les contrôles Leaflet sous l'en-tête */
+}
+
+.map-pin span {
+  display: block;
+  width: 28px;
+  height: 28px;
+  background: var(--pin-color);
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.map-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: inherit;
+}
+
+.charade-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+}
+.charade-list li + li {
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--border);
+}
+.charade-list .answer {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.charade-list .solved p { color: var(--muted); }
+.charade-list .solved .answer { color: var(--primary); text-decoration: none; }
+
+/* ---------- Boutons et liens ---------- */
+.reset {
+  align-self: flex-start;
+  padding: var(--space-xs) var(--space-s);
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.reset:hover { color: var(--text); border-color: var(--muted); }
+
+.back {
+  align-self: flex-start;
+  font-weight: 600;
+  text-decoration: none;
+}
+.back:hover { text-decoration: underline; }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 600px) {
+  main { padding-top: var(--space-m); gap: var(--space-m); }
+  .hint { margin-top: calc(-1 * var(--space-s)); }
+  .panel, .zone-info, .charade, .conclusion { padding: var(--space-s); }
+}

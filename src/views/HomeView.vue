@@ -18,7 +18,10 @@ function confirmReset() {
     Cette fresque est verrouillée : scannez son QR code pour la débloquer.
   </p>
 
-  <p>Fresques découvertes : {{ unlockedCount }} / {{ fresques.length }}</p>
+  <div>
+    <h1>Les fresques</h1>
+    <p class="progress">Fresques découvertes : {{ unlockedCount }} / {{ fresques.length }}</p>
+  </div>
 
   <div class="grid">
     <FresqueCard v-for="f in fresques" :key="f.id" :fresque="f" />

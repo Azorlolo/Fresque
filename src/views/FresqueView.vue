@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import FresqueImage from '../components/FresqueImage.vue'
 import { getFresque } from '../data/fresques'
-import { randomLockedFresque } from '../store/progress'
+import { nextCharade } from '../store/progress'
 
 const route = useRoute()
 const fresque = getFresque(route.params.id)
@@ -11,8 +11,8 @@ const fresque = getFresque(route.params.id)
 const selectedZoneId = ref(null)
 const selectedZone = computed(() => fresque.zones.find((z) => z.id === selectedZoneId.value))
 
-// Tirée une fois à l'ouverture de la page
-const prochaine = randomLockedFresque()
+// Choisie une fois à l'ouverture de la page (et ajoutée aux charades débloquées)
+const prochaine = nextCharade()
 </script>
 
 <template>
@@ -31,8 +31,8 @@ const prochaine = randomLockedFresque()
     <p>{{ selectedZone.info }}</p>
   </section>
 
-  <section>
-    <h2><em>{{ fresque.nomScientifique }}</em></h2>
+  <section class="panel">
+    <h2 class="scientific">{{ fresque.nomScientifique }}</h2>
     <p>{{ fresque.histoire }}</p>
   </section>
 
@@ -42,5 +42,5 @@ const prochaine = randomLockedFresque()
     <p v-else>Vous avez découvert toutes les fresques ! La conclusion vous attend sur l'accueil.</p>
   </section>
 
-  <router-link to="/">← Retour aux fresques</router-link>
+  <router-link to="/" class="back">← Retour aux fresques</router-link>
 </template>
