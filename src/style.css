@@ -26,6 +26,7 @@ body {
 
 .app {
   min-height: 100vh;
+  overflow-x: clip; /* une page du livre qui tourne peut déborder de l'écran */
   background: var(--bg);
   color: var(--text);
   transition: background-color 0.3s, color 0.3s;
@@ -34,8 +35,8 @@ body {
 /* ---------- En-tête ---------- */
 header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-s);
   padding: var(--space-s) var(--space-m);
   background: var(--primary);
@@ -46,6 +47,22 @@ header a {
   text-decoration: none;
   font-weight: 600;
   letter-spacing: 0.02em;
+}
+header nav {
+  display: flex;
+  gap: 4px;
+}
+header nav a {
+  padding: 4px 12px;
+  font-weight: 500;
+  border-radius: 999px;
+  opacity: 0.8;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+header nav a:hover { opacity: 1; }
+header nav a.active {
+  background: rgba(255, 255, 255, 0.18);
+  opacity: 1;
 }
 
 main {
@@ -322,9 +339,498 @@ main > .fresque-image { border-radius: var(--radius); }
 }
 .back:hover { text-decoration: underline; }
 
+/* ---------- Poème : livre aux pages tournantes ---------- */
+@property --turn {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.poeme-intro { text-align: center; }
+.poeme-intro h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(2.2rem, 7vw, 3rem);
+}
+.poeme-intro p {
+  max-width: 34em;
+  margin: 0 auto;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.book-stage {
+  --paper: #fbf5e8;
+  --paper-dark: #f1e6cf;
+  width: min(100%, 420px);
+  margin: 0 auto;
+}
+.book {
+  position: relative;
+  aspect-ratio: 3 / 5;
+  perspective: 1600px;
+  container-type: inline-size;
+  touch-action: pan-y; /* le glissé horizontal tourne la page, le vertical fait défiler */
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  transition: transform 0.7s cubic-bezier(0.45, 0.05, 0.35, 1);
+}
+.book.dragging { cursor: grabbing; }
+
+/* Tranche des pages et ombre du livre */
+.book::before,
+.book::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--paper-dark);
+  border-radius: 2px 8px 8px 2px;
+  box-shadow:
+    1px 1px 0 #e2d6bc, 2px 2px 0 #f3ead8, 3px 3px 0 #ddcfb2, 4px 4px 0 #efe5d1, 5px 5px 0 #d6c6a6,
+    10px 18px 34px rgba(40, 28, 10, 0.32);
+}
+.book::after { display: none; }
+
+.leaf {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.7s cubic-bezier(0.45, 0.05, 0.35, 1),
+    --turn 0.7s cubic-bezier(0.45, 0.05, 0.35, 1);
+}
+.leaf.dragging { transition: none; }
+
+.face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.face-front {
+  border-radius: 2px 8px 8px 2px;
+  background:
+    linear-gradient(to right, rgba(90, 60, 20, 0.22), rgba(90, 60, 20, 0) 7%),
+    radial-gradient(ellipse at 60% 35%, #fffcf4, var(--paper) 55%, var(--paper-dark) 130%);
+}
+.face-back {
+  transform: rotateY(180deg);
+  border-radius: 8px 2px 2px 8px;
+  background:
+    linear-gradient(to left, rgba(90, 60, 20, 0.22), rgba(90, 60, 20, 0) 7%),
+    radial-gradient(ellipse at 40% 35%, #fffcf4, var(--paper) 55%, var(--paper-dark) 130%);
+}
+/* Ombre qui suit la rotation de la feuille */
+.shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.face-front .shade {
+  background: linear-gradient(to left, rgba(40, 25, 5, 0.35), rgba(40, 25, 5, 0) 75%);
+  opacity: calc(var(--turn) * 1.4);
+}
+.face-back .shade {
+  background: linear-gradient(to right, rgba(40, 25, 5, 0.35), rgba(40, 25, 5, 0) 75%);
+  opacity: calc((1 - var(--turn)) * 1.4);
+}
+
+/* Contenu d'une page */
+.page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 9cqw 7cqw 6cqw 10cqw;
+  overflow: hidden;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: clamp(13px, 3.9cqw, 17px);
+  line-height: 1.5;
+  color: #2e261d;
+}
+.page-head { text-align: center; margin-bottom: 1.1em; }
+.page-num {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: var(--ink);
+  opacity: 0.75;
+}
+.page-title {
+  margin: 0;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: 2.1em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.page-sub {
+  margin-top: 0.15em;
+  font-style: italic;
+  color: #6f604e;
+}
+.ornament {
+  display: block;
+  width: 7em;
+  height: 0.8em;
+  margin: 0.7em auto 0;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.ornament path:last-child { fill: var(--ink); stroke: none; }
+
+.verses {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.verse {
+  padding-left: 1.2em;
+  text-indent: -1.2em; /* un vers trop long revient à la ligne en retrait */
+  opacity: 0;
+}
+.verse + .verse { margin-top: 0; }
+.verse:first-child::first-letter {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: 1.7em;
+  line-height: 1;
+  color: var(--ink);
+}
+/* Les vers s'écrivent à l'encre à la première ouverture de la page */
+.verses.ink .verse {
+  animation: ink 0.9s ease-out both;
+  animation-delay: calc(var(--n) * 110ms + 250ms);
+}
+@keyframes ink {
+  from { opacity: 0; filter: blur(3px); transform: translateY(4px); }
+  to { opacity: 1; filter: none; transform: none; }
+}
+
+/* Conclusion débloquée : titre doré */
+.page.final:not(.locked) .page-title {
+  background: linear-gradient(100deg, #8a6424 20%, #e6c06a 50%, #8a6424 80%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gilt 5s linear infinite;
+}
+@keyframes gilt {
+  from { background-position: 100% 0; }
+  to { background-position: -150% 0; }
+}
+
+/* Page pas encore débloquée */
+.sealed {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  text-align: center;
+  font-style: italic;
+  color: #6f604e;
+}
+.sealed p + p { margin-top: 0; }
+.sealed strong {
+  display: block;
+  margin-top: 0.3em;
+  font-style: normal;
+  color: var(--ink);
+}
+.seal {
+  width: 2.4em;
+  height: 2.4em;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+.ghost-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75em;
+  width: 100%;
+  margin: 0.5em 0;
+}
+.ghost-lines span {
+  width: 86%;
+  height: 0.45em;
+  border-radius: 999px;
+  background: rgba(90, 70, 40, 0.09);
+}
+.ghost-lines span:nth-child(odd) { width: 74%; }
+.ghost-lines span:nth-child(3n) { width: 92%; }
+.sealed-link {
+  font-size: 0.8em;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid currentColor;
+}
+
+.page-foot {
+  margin-top: 0.8em;
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: #8a7a64;
+}
+.page-foot::before { content: '— '; }
+.page-foot::after { content: ' —'; }
+
+/* Verso : médaillon de la fresque de la page suivante */
+.verso {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6cqw;
+}
+.medallions { display: flex; }
+.medallions img {
+  width: 48cqw;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 3px solid #fffaf0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(120, 90, 40, 0.35), 0 8px 24px rgba(60, 40, 10, 0.2);
+}
+.medallions img:not(:only-child) { width: 30cqw; }
+.medallions img + img { margin-left: -9cqw; }
+.verso-num {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 9cqw;
+  letter-spacing: 0.2em;
+  color: #8a7a64;
+}
+
+/* Couverture : cuir ancien, filets et titre dorés */
+.cover-leaf { --gold: #d9b45f; }
+.face-front.cover {
+  border-radius: 3px 10px 10px 3px;
+  background:
+    /* charnière du dos */
+    linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.12) 4%, rgba(255, 220, 170, 0.08) 5.5%, rgba(0, 0, 0, 0) 9%),
+    /* grain du cuir */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 45% 35%, #74402a, #4d2616 55%, #2c140a 105%);
+  box-shadow: inset 0 0 2.5cqw rgba(0, 0, 0, 0.55);
+}
+.cover-frame {
+  position: absolute;
+  inset: 7cqw 6cqw 7cqw 10cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4cqw;
+  border: 1.5px solid var(--gold);
+  border-radius: 3px;
+  outline: 1px solid rgba(217, 180, 95, 0.55);
+  outline-offset: -2.2cqw;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.6));
+}
+.cover-corner {
+  position: absolute;
+  width: 13cqw;
+  height: 13cqw;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.4;
+}
+.cover-corner path:last-child { fill: var(--gold); stroke: none; }
+.cover-corner.tl { top: 3.5cqw; left: 3.5cqw; }
+.cover-corner.tr { top: 3.5cqw; right: 3.5cqw; transform: scaleX(-1); }
+.cover-corner.bl { bottom: 3.5cqw; left: 3.5cqw; transform: scaleY(-1); }
+.cover-corner.br { bottom: 3.5cqw; right: 3.5cqw; transform: scale(-1); }
+.cover-ornament {
+  width: 32cqw;
+  height: 3.2cqw;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.2;
+}
+.cover-ornament path:last-child { fill: var(--gold); stroke: none; }
+.cover-title {
+  margin: 0;
+  padding: 0 6cqw;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: 13cqw;
+  line-height: 1.02;
+  letter-spacing: 0.02em;
+  text-align: center;
+  /* feuille d'or : dégradé chaud avec un éclat qui passe */
+  background: linear-gradient(170deg, #fff1b8 0%, #e6bf62 28%, #a8772a 52%, #f3d488 68%, #b8862f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cover-emblems {
+  width: 40cqw;
+  height: 8cqw;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+}
+.cover-emblems circle { fill: var(--gold); stroke: none; }
+.cover-sub {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 4.4cqw;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Contre-plat : papier de garde semé de points dorés, bordé du cuir replié */
+.face-back.endpaper {
+  border-radius: 10px 3px 3px 10px;
+  background:
+    linear-gradient(to left, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 7%),
+    radial-gradient(rgba(217, 180, 95, 0.4) 1px, transparent 1.6px) 0 0 / 14px 14px,
+    radial-gradient(rgba(217, 180, 95, 0.22) 1px, transparent 1.6px) 7px 7px / 14px 14px,
+    #1d3a52;
+  box-shadow: inset 0 0 0 3.5cqw #4d2616, inset 0 0 0 calc(3.5cqw + 1px) rgba(217, 180, 95, 0.6);
+}
+.ex-libris {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1cqw;
+  padding: 5cqw 8cqw;
+  transform: translate(-50%, -50%);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: #5a4630;
+  background: #f8f0dc;
+  border: 1px solid #c9a24d;
+  outline: 1px solid #c9a24d;
+  outline-offset: -1.6cqw;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.ex-libris span { font-style: italic; font-size: 5cqw; }
+.ex-libris strong {
+  font-size: 3.6cqw;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Navigation sous le livre */
+.book-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-s);
+  margin-top: calc(-1 * var(--space-s));
+}
+.book-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0 0 4px;
+  font-size: 1.7rem;
+  line-height: 1;
+  color: var(--primary);
+  background: var(--surface);
+  border: 1px solid rgba(43, 36, 29, 0.15);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+.book-btn:hover:not(:disabled) { background: #fffaf0; }
+.book-btn:disabled { opacity: 0.35; cursor: default; }
+.book-dots { display: flex; gap: 4px; }
+.book-dot {
+  min-width: 40px;
+  height: 32px;
+  padding: 0 8px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.book-dot.locked { opacity: 0.45; }
+.book-dot.active {
+  color: #fff;
+  background: var(--primary);
+  opacity: 1;
+}
+.book-hint {
+  margin-top: calc(-1 * var(--space-m));
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Grand écran : livre ouvert en double page, centré quand il est fermé */
+@media (min-width: 900px) {
+  main.wide { max-width: 1040px; }
+  .book-stage { width: min(100%, 880px); }
+  .book {
+    width: 50%;
+    margin-left: 50%;
+    aspect-ratio: 5 / 7;
+    perspective: 2400px;
+  }
+  /* Fermé, le livre est centré ; il glisse à droite à mesure que la couverture s'ouvre (--opening de 0 à 1) */
+  .book { transform: translateX(calc(-50% * (1 - var(--opening, 1)))); }
+  .book.dragging { transition: none; }
+  /* Tranche des pages de gauche : n'apparaît qu'une fois la couverture posée à plat,
+     et disparaît dès que la couverture bouge pour qu'aucune page ne reste à gauche de celle-ci */
+  .book::after {
+    display: block;
+    inset: 0 100% 0 -100%;
+    border-radius: 8px 2px 2px 8px;
+    box-shadow:
+      -1px 1px 0 #e2d6bc, -2px 2px 0 #f3ead8, -3px 3px 0 #ddcfb2, -4px 4px 0 #efe5d1, -5px 5px 0 #d6c6a6,
+      -10px 18px 34px rgba(40, 28, 10, 0.32);
+    transition: opacity 0.25s;
+  }
+  .book-stage.closed .book::after,
+  .book-stage.cover-moving .book::after {
+    opacity: 0;
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book, .leaf { transition-duration: 0.01s; }
+  .verse { opacity: 1; }
+  .verses.ink .verse { animation: none; }
+  .page.final:not(.locked) .page-title { animation: none; }
+}
+
 /* ---------- Mobile ---------- */
 @media (max-width: 600px) {
+  header { padding: 12px var(--space-s); }
+  header nav a { padding: 4px 10px; }
   main { padding-top: var(--space-m); gap: var(--space-m); }
   .hint { margin-top: calc(-1 * var(--space-s)); }
+  .book-hint { margin-top: calc(-1 * var(--space-s)); }
   .panel, .zone-info, .charade, .conclusion { padding: var(--space-s); }
 }

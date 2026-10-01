@@ -1,13 +1,13 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { getFresque, defaultTheme } from './data/fresques'
+import { getFresque, defaultTheme, poemeTheme } from './data/fresques'
 
 const route = useRoute()
 
 // Les couleurs de la page suivent la fresque affichée (thème neutre sur l'accueil)
 const themeVars = computed(() => {
-  const theme = getFresque(route.params.id)?.theme ?? defaultTheme
+  const theme = route.name === 'poeme' ? poemeTheme : (getFresque(route.params.id)?.theme ?? defaultTheme)
   return {
     '--primary': theme.primary,
     '--accent': theme.accent,
@@ -20,10 +20,14 @@ const themeVars = computed(() => {
 <template>
   <div class="app" :style="themeVars">
     <header>
-      <router-link to="/">Fresque Interactive</router-link>
-      <router-link to="/carte">Carte</router-link>
+      <router-link to="/" class="brand">Fresque Interactive</router-link>
+      <nav>
+        <router-link to="/" exact-active-class="active">Fresques</router-link>
+        <router-link to="/poeme" active-class="active">Poème</router-link>
+        <router-link to="/carte" active-class="active">Carte</router-link>
+      </nav>
     </header>
-    <main>
+    <main :class="{ wide: route.name === 'poeme' }">
       <router-view :key="$route.fullPath" />
     </main>
   </div>

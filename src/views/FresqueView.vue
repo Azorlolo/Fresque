@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import FresqueImage from '../components/FresqueImage.vue'
-import { getFresque } from '../data/fresques'
+import { fresques, getFresque } from '../data/fresques'
 import { nextCharade, consumeReveal } from '../store/progress'
 
 const route = useRoute()
@@ -16,6 +16,9 @@ const reveal = consumeReveal(fresque.id)
 
 // Choisie une fois à l'ouverture de la page (et ajoutée aux charades débloquées)
 const prochaine = nextCharade()
+
+// Page du livre qui contient la partie du poème de cette fresque
+const poemePage = fresques.indexOf(fresque) + 1
 </script>
 
 <template>
@@ -40,10 +43,19 @@ const prochaine = nextCharade()
     <p>{{ fresque.histoire }}</p>
   </section>
 
+  <section class="panel">
+    <h2>{{ fresque.poeme.numero }}. {{ fresque.poeme.titre }}</h2>
+    <p>Cette fresque vous a révélé un chant du poème.</p>
+    <p><router-link :to="{ name: 'poeme', query: { page: poemePage } }">Lire « {{ fresque.poeme.sousTitre }} » →</router-link></p>
+  </section>
+
   <section class="charade">
     <h2>Charade</h2>
     <p v-if="prochaine">{{ prochaine.charade }}</p>
-    <p v-else>Vous avez découvert toutes les fresques ! La conclusion vous attend sur l'accueil.</p>
+    <p v-else>
+      Vous avez découvert toutes les fresques !
+      <router-link :to="{ name: 'poeme', query: { page: fresques.length + 1 } }">La conclusion du poème vous attend.</router-link>
+    </p>
   </section>
 
   <router-link to="/" class="back">← Retour aux fresques</router-link>

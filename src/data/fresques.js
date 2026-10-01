@@ -16,6 +16,7 @@
 //  - zones     : éléments cliquables sur la fresque, positions en % de l'image
 //  - charade   : énigme qui mène À CETTE fresque (affichée sur les autres fresques)
 //  - position  : [latitude, longitude] de la fresque sur le campus (affichée sur la carte une fois scannée)
+//  - poeme     : partie du poème révélée par cette fresque (une page du livre sur #/poeme)
 
 export const fresques = [
   {
@@ -33,6 +34,23 @@ export const fresques = [
       { id: 'molecule', label: 'Molécule de kératine', x: 86, y: 61, w: 14, h: 24, info: 'Molécule de kératine, protéine de la carapace.' },
     ],
     charade: 'Mon premier est un fruit sec... Mon tout nage lentement dans le lagon.',
+    poeme: {
+      numero: 'I',
+      titre: 'La Mer',
+      sousTitre: 'Le voyage de la tortue',
+      vers: [
+        'Dans le silence bleu des solitudes calmes,',
+        'Glisse la sage écaille au rythme de ses palmes.',
+        'Reine des fonds marins aux reflets de corail,',
+        'Elle porte sur son dos un antique vitrail,',
+        'L’écho des grands courants et des vagues profondes',
+        'Où dort le souvenir des origines du monde.',
+        'Pourtant, le cœur battant sous son plastron de sel,',
+        'Elle monte parfois vers le jour immortel,',
+        "Pour saluer la rive où s'éteint la marée,",
+        'Attendant un mystère à la surface dorée.',
+      ],
+    },
   },
   {
     id: 'hibiscus',
@@ -49,6 +67,23 @@ export const fresques = [
       { id: 'molecule', label: 'Molécule de cyanidine', x: 83, y: 73, w: 16, h: 20, info: 'Molécule de cyanidine, pigment du pétale.' },
     ],
     charade: 'Je suis une fleur rouge que l’on glisse derrière l’oreille.',
+    poeme: {
+      numero: 'II',
+      titre: 'La Terre',
+      sousTitre: "L'offrande de l'hibiscus",
+      vers: [
+        'Sur le sable tiédi, un trésor est posé,',
+        "Un éclat vermeil pur que nul n'a effacé.",
+        "C'est un hibiscus d'or, de velours et de braise,",
+        "Né des flancs généreux d'une terre à son aise.",
+        'Il exhale en secret le parfum des jardins,',
+        "La vigueur des racines, l'aurore du matin,",
+        'Et porte en ses pétales aux teintes éclatantes',
+        'La sève de la terre et ses sèves ardentes.',
+        "Offert au bord de l'eau comme un baiser vivant,",
+        'Il unit le rivage aux promesses du vent.',
+      ],
+    },
   },
   {
     id: 'perruche',
@@ -65,6 +100,23 @@ export const fresques = [
       { id: 'molecule', label: 'Molécule de mélanine', x: 41, y: 74, w: 13, h: 25, info: 'Mélanine et caroténoïdes, pigments de plume.' },
     ],
     charade: 'Vert de la tête à la queue, je bavarde dans les arbres.',
+    poeme: {
+      numero: 'III',
+      titre: 'Le Ciel',
+      sousTitre: "L'envol et la perruche",
+      vers: [
+        "Ce présent fut porté par l'oiseau de lumière,",
+        'Une perruche vive aux plumes printanières.',
+        "Messagère d'azur, d'émeraude et d'argent,",
+        "Elle a fendu les airs d'un battement changeant",
+        "Pour livrer cette fleur au peuple de l'abîme.",
+        'En la voyant planer au-dessus de la cime,',
+        "La tortue s'émerveille et se prend à rêver :",
+        "Elle veut déchirer l'écume et s'élever.",
+        "Car pour elle désormais, le ciel n'est qu'une mer,",
+        "Un infini d'azur où voler dans les airs.",
+      ],
+    },
   },
 ]
 
@@ -78,9 +130,26 @@ export const campus = {
   zoom: 20,
 }
 
+// Thème de la page poème
+export const poemeTheme = { primary: '#1d3a52', accent: '#b8893a', bg: '#e9e2d4', text: '#2b241d' }
+
+// Conclusion du poème : dernière page du livre, débloquée quand toutes les fresques sont scannées
 export const conclusion = {
-  titre: 'Conclusion',
-  texte: "Et c'est ainsi que tous les habitants du récif... (fin de l'histoire)",
+  numero: 'IV',
+  titre: "L'Horizon",
+  sousTitre: "L'union des trois mondes",
+  vers: [
+    "Désormais, sur l'écume où le couchant flamboie,",
+    'La tortue garde en elle une secrète joie.',
+    'L’onde reste son havre et la fleur son trésor,',
+    "Mais son regard s'élance aux grands rivages d'or.",
+    'La mer, la terre et l’air ont mêlé leurs murmures :',
+    "Il n'est plus de frontière à sa noble nature.",
+    'En fendant les courants comme on fend les nuages,',
+    "Elle nage vers l'aube en quittant les rivages ;",
+    "Et dans le bleu miroir où s'efface le lieu,",
+    'Son esprit a trouvé son plus vaste grand bleu.',
+  ],
 }
 
 export function getFresque(id) {

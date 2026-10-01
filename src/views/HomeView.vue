@@ -45,9 +45,16 @@ function confirmReset() {
   </div>
 
   <section class="conclusion">
-    <h2>{{ conclusion.titre }}</h2>
-    <p v-if="allUnlocked">{{ conclusion.texte }}</p>
-    <p v-else>🔒 Scannez toutes les fresques pour découvrir la fin de l'histoire.</p>
+    <h2>Le Poème</h2>
+    <p v-if="allUnlocked">
+      Toutes les fresques sont découvertes : la conclusion du poème, « {{ conclusion.titre }} », est révélée.
+    </p>
+    <p v-else>Chaque fresque révèle un chant du poème. 🔒 Scannez-les toutes pour en découvrir la fin.</p>
+    <p>
+      <router-link :to="allUnlocked ? { name: 'poeme', query: { page: fresques.length + 1 } } : { name: 'poeme' }">
+        Ouvrir le livre →
+      </router-link>
+    </p>
   </section>
 
   <button class="btn-danger reset" @click="resetDialog.showModal()">Réinitialiser la progression</button>
