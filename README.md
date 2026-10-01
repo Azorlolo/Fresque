@@ -81,6 +81,16 @@ En local (`npm run dev`) : `http://localhost:5173/#/fresque/tortue?k=t7k2p9`, et
 
 Si un jeton est modifié dans `fresques.js`, penser à mettre à jour ce tableau et à régénérer le QR code.
 
+### Générer les QR codes
+
+```bash
+npm run qrcodes -- https://<site>/   # QR codes du site hébergé
+npm run qrcodes                      # QR codes du serveur de dev (IP locale:5173), pour tester sur téléphone
+```
+
+Les ids et jetons sont lus dans `src/data/fresques.js`. Un QR code par fresque est généré dans `qrcodes/` :
+`<id>.png` (1024 px) et `<id>.svg` (vectoriel, à privilégier pour l'impression). Niveau de correction élevé (H) pour rester lisible même abîmé.
+
 ## 📁 Structure du projet
 
 ```
@@ -111,7 +121,7 @@ Si un jeton est modifié dans `fresques.js`, penser à mettre à jour ce tableau
 - [x] Scan QR code (via la caméra native)
 - [ ] Design de la fresque et découpage en parties
 - [ ] Intégration des contenus (noms scientifiques, histoire, conclusion)
-- [ ] Génération des QR codes
+- [x] Génération des QR codes
 - [ ] Hébergement
 
 ## 📄 Licence

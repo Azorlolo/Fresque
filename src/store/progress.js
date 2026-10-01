@@ -37,8 +37,22 @@ export function isUnlocked(id) {
   return state.scanned.includes(id)
 }
 
+// Fresque qui vient d'être débloquée pour la première fois : sa page joue l'animation de mise en couleur.
+// Gardé en mémoire uniquement, pour que l'animation ne rejoue pas au rechargement.
+let pendingReveal = null
+
 export function unlock(id) {
-  if (!isUnlocked(id)) state.scanned.push(id)
+  if (!isUnlocked(id)) {
+    state.scanned.push(id)
+    pendingReveal = id
+  }
+}
+
+// true une seule fois après le premier scan de la fresque
+export function consumeReveal(id) {
+  if (pendingReveal !== id) return false
+  pendingReveal = null
+  return true
 }
 
 export function reset() {

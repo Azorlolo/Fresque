@@ -3,13 +3,16 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import FresqueImage from '../components/FresqueImage.vue'
 import { getFresque } from '../data/fresques'
-import { nextCharade } from '../store/progress'
+import { nextCharade, consumeReveal } from '../store/progress'
 
 const route = useRoute()
 const fresque = getFresque(route.params.id)
 
 const selectedZoneId = ref(null)
 const selectedZone = computed(() => fresque.zones.find((z) => z.id === selectedZoneId.value))
+
+// Premier scan : la fresque passe du noir et blanc à la couleur
+const reveal = consumeReveal(fresque.id)
 
 // Choisie une fois à l'ouverture de la page (et ajoutée aux charades débloquées)
 const prochaine = nextCharade()
@@ -21,6 +24,7 @@ const prochaine = nextCharade()
   <FresqueImage
     :fresque="fresque"
     interactive
+    :reveal="reveal"
     :selected-zone="selectedZoneId"
     @select="selectedZoneId = $event"
   />

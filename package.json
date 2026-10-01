@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "qrcodes": "node scripts/qrcodes.js"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.0",
+    "qrcode": "^1.5.4",
     "vite": "^5.4.0"
   }
 }
