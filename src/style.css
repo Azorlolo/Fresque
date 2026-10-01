@@ -362,9 +362,42 @@ main > .fresque-image { border-radius: var(--radius); }
 .book-stage {
   --paper: #fbf5e8;
   --paper-dark: #f1e6cf;
+  /* Mobile : bande de la page de gauche qui reste visible à côté de la page de droite */
+  --peek: 12cqw;
   width: min(100%, 420px);
   margin: 0 auto;
+  container-type: inline-size;
+  /* Mobile : le reste de la page de gauche est rogné (overflow-y reste visible pour l'ombre) */
+  overflow-x: clip;
 }
+@media (max-width: 899px) {
+  /* Le livre est décalé de --peek pour laisser voir le bord de la page de gauche ;
+     fermé, il se recentre (suit l'ouverture de la couverture, --opening de 0 à 1) */
+  .book {
+    width: calc(100% - var(--peek));
+    margin-left: var(--peek);
+    transform: translateX(calc(var(--peek) / -2 * (1 - var(--opening, 1))));
+  }
+  .book.dragging { transition: none; }
+  /* Bouton « Voir la page de gauche » : le livre glisse à droite, la page de gauche s'affiche en entier
+     et c'est le bord de la page de droite qui reste visible */
+  .book-stage.show-left .book { transform: translateX(calc(100cqw - 2 * var(--peek))); }
+}
+
+.book-side {
+  align-self: center;
+  margin-bottom: calc(-1 * var(--space-xs));
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--surface);
+  border: 1px solid rgba(43, 36, 29, 0.15);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.book-side:hover { background: #fffaf0; }
 .book {
   position: relative;
   aspect-ratio: 3 / 5;
@@ -790,7 +823,8 @@ main > .fresque-image { border-radius: var(--radius); }
 /* Grand écran : livre ouvert en double page, centré quand il est fermé */
 @media (min-width: 900px) {
   main.wide { max-width: 1040px; }
-  .book-stage { width: min(100%, 880px); }
+  .book-stage { width: min(100%, 880px); overflow-x: visible; }
+  .book-side { display: none; }
   .book {
     width: 50%;
     margin-left: 50%;

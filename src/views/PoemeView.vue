@@ -46,9 +46,13 @@ function holdActive(i) {
   releaseTimer = setTimeout(() => (active.value = null), TURN_MS + 50)
 }
 
+// Mobile : le livre glisse à droite pour montrer la page de gauche (verso de la feuille tournée)
+const showLeft = ref(false)
+
 function show(i) {
   current.value = i
   seen.add(i)
+  showLeft.value = false
 }
 
 function next() {
@@ -95,8 +99,8 @@ function onPointerMove(e) {
 
   if (!drag.dir) {
     if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return
-    // Geste vertical : on laisse la page défiler
-    if (Math.abs(dy) > Math.abs(dx)) return (drag = null)
+    // Geste vertical : on laisse la page défiler. Page de gauche affichée : pas de page à tourner
+    if (Math.abs(dy) > Math.abs(dx) || showLeft.value) return (drag = null)
     const dir = dx < 0 ? 1 : -1
     if ((dir > 0 && current.value >= last.value) || (dir < 0 && current.value <= 0)) return (drag = null)
     drag.dir = dir
@@ -116,7 +120,10 @@ function onPointerUp(e) {
   if (!drag || e.pointerId !== drag.id) return
   const { dir, progress } = drag
 
-  if (!dir) {
+  if (!dir && showLeft.value) {
+    // Page de gauche affichée : un toucher ramène le livre
+    showLeft.value = false
+  } else if (!dir) {
     // Simple toucher : la couverture s'ouvre, puis bord droit = page suivante, bord gauche = page précédente
     const rect = book.value.getBoundingClientRect()
     current.value === 0 || e.clientX > rect.left + rect.width / 2 ? next() : prev()
@@ -175,9 +182,14 @@ onBeforeUnmount(() => {
     <p>Chaque fresque découverte révèle un chant. Réunissez-les pour lire la fin du voyage.</p>
   </div>
 
+  <!-- Mobile uniquement : une seule page tient à l'écran -->
+  <button v-if="current > 0" class="book-side" :aria-pressed="showLeft" @click="showLeft = !showLeft">
+    {{ showLeft ? 'Revenir à la page →' : '← Voir la page de gauche' }}
+  </button>
+
   <div
     class="book-stage"
-    :class="{ closed: current === 0, 'cover-moving': coverMoving }"
+    :class="{ closed: current === 0, 'cover-moving': coverMoving, 'show-left': showLeft }"
     :style="{ '--opening': opening }"
   >
     <div
@@ -277,7 +289,7 @@ onBeforeUnmount(() => {
             <div class="shade"></div>
           </article>
   
-          <!-- Verso : illustration de la page suivante (visible en double page sur grand écran) -->
+          <!-- Verso : illustration de la page suivante (double page sur grand écran, bouton « Voir la page de gauche » sur mobile) -->
           <div class="face face-back" aria-hidden="true">
             <div v-if="pages[i + 1]" class="verso">
               <div class="medallions">
