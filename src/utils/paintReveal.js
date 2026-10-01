@@ -4,7 +4,9 @@
 // Principe : on peint des taches opaques dans un masque (canvas hors écran), puis on dessine
 // l'image en couleur uniquement là où le masque est peint (composition 'source-in').
 
-const START_DELAY = 500 // ms en noir et blanc avant le premier coup de pinceau
+// ms en noir et blanc avant le premier coup de pinceau : le temps de secouer la bombe de peinture
+// (son Shake-Spray, voir playReveal dans src/audio/sound.js)
+const START_DELAY = 1300
 const SPREAD = 2200 // ms pendant lesquelles les taches apparaissent
 const SPLAT_DURATION = [700, 1100] // ms pour qu'une tache s'étale
 const FINAL_FADE = 500 // ms de fondu final pour combler les derniers trous

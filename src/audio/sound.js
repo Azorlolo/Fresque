@@ -8,8 +8,9 @@
 //  - terre : jardin tropical, fichier public/sons/Tropical.mp3 en boucle (l'Hibiscus)
 //  - ciel  : vent en altitude et piaillements de perruches (la Perruche)
 //  - livre : feu de cheminée, fichier public/sons/Fireplace.mp3 en boucle (le Poème)
-// Bruitages : page qui tourne, taches de peinture (premier scan), toucher d'un élément de la fresque.
-// Le bruit de page vient du fichier public/sons/Page-Flip.mp3 (voir « Fichiers audio »).
+// Bruitages : page qui tourne, bombe de peinture aérosol (premier scan), toucher d'un élément de la fresque.
+// Le bruit de page vient du fichier public/sons/Page-Flip.mp3, la bombe de peinture de Shake-Spray.mp3
+// et Spray1/2/3.mp3 (voir « Fichiers audio »).
 //
 // Les navigateurs interdisent le son avant une première interaction : le contexte audio démarre
 // au premier toucher / clic / touche du clavier. Le choix « son coupé » est sauvegardé en localStorage.
@@ -53,10 +54,14 @@ function ensureContext() {
 // ---------- Fichiers audio (dans public/sons/) ----------
 // Absent ou illisible → son synthétisé à la place.
 const PAGE_TURN_FILE = 'sons/Page-Flip.mp3' // bruit de page
+const SHAKE_FILE = 'sons/Shake-Spray.mp3' // bombe de peinture qu'on secoue (premier scan)
+const SPRAY_FILES = ['sons/Spray1.mp3', 'sons/Spray2.mp3', 'sons/Spray3.mp3'] // jets d'aérosol, tirés au hasard
 // Ambiances en boucle, chargées seulement à l'ouverture de leur page
 const FIREPLACE_FILE = 'sons/Fireplace.mp3' // le livre
 const TROPICAL_FILE = 'sons/Tropical.mp3' // l'Hibiscus
 let pageTurnFile = null
+let shakeFile = null
+const sprayFiles = []
 const files = {}
 
 // Charge et décode un fichier une seule fois
@@ -86,6 +91,29 @@ function loadFiles() {
   loadSound(PAGE_TURN_FILE)
     .then((buffer) => (pageTurnFile = buffer))
     .catch(() => {})
+  loadSound(SHAKE_FILE)
+    .then((buffer) => (shakeFile = buffer))
+    .catch(() => {})
+  SPRAY_FILES.forEach((path) =>
+    loadSound(path)
+      .then((buffer) => sprayFiles.push(buffer))
+      .catch(() => {}),
+  )
+}
+
+// Joue un fichier une fois, à l'instant t ; pan : position gauche (-1) / droite (1)
+function playFile(buffer, t, { rate = 1, pan = 0 } = {}) {
+  const src = ctx.createBufferSource()
+  src.buffer = buffer
+  src.playbackRate.value = rate
+  let out = master
+  if (pan && ctx.createStereoPanner) {
+    out = ctx.createStereoPanner()
+    out.pan.value = pan
+    out.connect(master)
+  }
+  src.connect(out)
+  src.start(t)
 }
 
 // Son autorisé et activé
@@ -451,36 +479,95 @@ export function playPageTurn({ heavy = false } = {}) {
   flap.stop(t + dur + 0.3)
 }
 
-// Mise en couleur d'une fresque (premier scan) : taches de peinture puis un scintillement final.
-// Les temps suivent l'animation de src/utils/paintReveal.js.
+// Mise en couleur d'une fresque (premier scan) : on secoue la bombe de peinture pendant que l'image
+// est en noir et blanc, puis des jets d'aérosol accompagnent les taches, et un scintillement final.
+// Les temps suivent l'animation de src/utils/paintReveal.js (premier coup de pinceau à 1,3 s,
+// taches pendant 2,2 s). Fichiers de public/sons/ s'ils sont chargés, sinon sons synthétisés.
+const FIRST_SPRAY = 1.3 // s, = START_DELAY de paintReveal.js
+const LAST_SPRAY = 3.3 // s, dernier jet possible
+
 export function playReveal() {
   if (!ready()) return
   const t = ctx.currentTime
-  for (let i = 0; i < 12; i++) splat(t + 0.5 + rand(0, 2.2))
-  shimmer(t + 3.4)
+
+  // Bombe secouée : le cliquetis du fichier dure ~1,2 s
+  if (shakeFile) playFile(shakeFile, t)
+  else shakeCan(t + 0.8)
+
+  // Jets successifs pendant l'apparition des taches, sans rejouer deux fois de suite le même fichier
+  let s = t + FIRST_SPRAY
+  let last = -1
+  while (s < t + LAST_SPRAY) {
+    if (sprayFiles.length) {
+      let i = Math.floor(rand(0, sprayFiles.length))
+      if (i === last && sprayFiles.length > 1) i = (i + 1) % sprayFiles.length
+      last = i
+      const rate = rand(0.92, 1.08) // chaque jet un peu différent
+      playFile(sprayFiles[i], s, { rate, pan: rand(-0.5, 0.5) })
+      s += sprayFiles[i].duration / rate + rand(0.03, 0.15)
+    } else {
+      const dur = rand(0.25, 0.55)
+      spray(s, dur)
+      s += dur + rand(0.05, 0.2)
+    }
+  }
+  shimmer(t + FIRST_SPRAY + 2.9)
 }
 
-function splat(t) {
-  // Éclaboussure : bruit étouffé dont le timbre retombe
-  const src = noiseSource('pink', false)
-  const lp = filter('lowpass', 1800, 2)
-  lp.frequency.setValueAtTime(rand(1500, 2500), t)
-  lp.frequency.exponentialRampToValueAtTime(200, t + 0.2)
-  const g = gain(0)
-  envelope(g.gain, t, rand(0.15, 0.3), 0.005, 0.2)
-  src.connect(lp).connect(g).connect(master)
-  src.start(t, rand(0, 3))
-  src.stop(t + 0.3)
+// Bombe qu'on secoue (synthétisée, si Shake-Spray.mp3 manque) : la bille cogne contre la paroi
+function shakeCan(t) {
+  ;[0, 0.07, 0.19, 0.26, 0.38].forEach((delay) => {
+    const at = t + delay
+    // Choc : éclat de bruit bref et résonant
+    const src = noiseSource('white', false)
+    const bp = filter('bandpass', rand(2600, 3400), 4)
+    const g = gain(0)
+    envelope(g.gain, at, rand(0.25, 0.4), 0.001, 0.04)
+    src.connect(bp).connect(g).connect(master)
+    src.start(at, rand(0, 3.9))
+    src.stop(at + 0.08)
 
-  // « Plop » de la goutte
-  const osc = ctx.createOscillator()
-  osc.frequency.setValueAtTime(rand(180, 260), t)
-  osc.frequency.exponentialRampToValueAtTime(60, t + 0.12)
-  const og = gain(0)
-  envelope(og.gain, t, 0.12, 0.004, 0.12)
-  osc.connect(og).connect(master)
-  osc.start(t)
-  osc.stop(t + 0.2)
+    // Tintement métallique de la bille
+    const osc = ctx.createOscillator()
+    osc.frequency.value = rand(1700, 2100)
+    const og = gain(0)
+    envelope(og.gain, at, 0.03, 0.001, 0.05)
+    osc.connect(og).connect(master)
+    osc.start(at)
+    osc.stop(at + 0.08)
+  })
+}
+
+// Jet d'aérosol synthétisé (si SprayN.mp3 manquent) : « pschhh », souffle aigu qui démarre net, tient puis se coupe au relâchement de la valve
+function spray(t, dur) {
+  const out = ctx.createStereoPanner ? ctx.createStereoPanner() : gain(1)
+  if (out.pan) out.pan.value = rand(-0.5, 0.5) // le bras qui bouge devant le mur
+  out.connect(master)
+
+  // Clic de la valve
+  const click = noiseSource('white', false)
+  const clickFilter = filter('highpass', 1500)
+  const cg = gain(0)
+  envelope(cg.gain, t, 0.15, 0.001, 0.012)
+  click.connect(clickFilter).connect(cg).connect(out)
+  click.start(t, rand(0, 3.9))
+  click.stop(t + 0.03)
+
+  // Souffle : bruit blanc limité aux aigus, légèrement instable
+  const hiss = noiseSource('white', false)
+  const hp = filter('highpass', 2500, 0.7)
+  const lp = filter('lowpass', 10000, 0.7)
+  lp.frequency.setValueAtTime(rand(7000, 9000), t)
+  lp.frequency.linearRampToValueAtTime(rand(9000, 11000), t + dur)
+  const g = gain(0)
+  const peak = rand(0.07, 0.1)
+  g.gain.setValueAtTime(0, t)
+  g.gain.linearRampToValueAtTime(peak, t + 0.02)
+  g.gain.linearRampToValueAtTime(peak * rand(0.75, 0.9), t + dur)
+  g.gain.linearRampToValueAtTime(0, t + dur + 0.06)
+  hiss.connect(hp).connect(lp).connect(g).connect(out)
+  hiss.start(t, rand(0, 3))
+  hiss.stop(t + dur + 0.1)
 }
 
 // Arpège doux en gamme pentatonique

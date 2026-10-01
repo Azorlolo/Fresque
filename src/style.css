@@ -913,7 +913,9 @@ main > .fresque-image { border-radius: var(--radius); }
 /* ---------- Bouton son ---------- */
 .sound-toggle {
   position: fixed;
-  right: var(--space-s);
+  /* En bas à gauche : le coin bas droit est réservé à l'intégration Netlify */
+  left: var(--space-s);
+  left: calc(var(--space-s) + env(safe-area-inset-left));
   bottom: var(--space-s);
   bottom: calc(var(--space-s) + env(safe-area-inset-bottom));
   z-index: 100;

@@ -77,7 +77,7 @@ export const fresques = [
         ],
       },
     ],
-    charade: 'Mon premier est un fruit sec... Mon tout nage lentement dans le lagon.',
+    charade: "Au-dessus de ma tête, deux cent cinquante élèves écoutent un seul maître. À côté de moi, des machines donnent forme aux idées. Une nageuse des mers m'y attend, patiente et lente.",
     poeme: {
       numero: 'I',
       titre: 'La Mer',
@@ -143,7 +143,7 @@ export const fresques = [
         ],
       },
     ],
-    charade: 'Je suis une fleur rouge que l’on glisse derrière l’oreille.',
+    charade: "Là où des sœurs, dans la langue de Shakespeare, nourrissent les affamés, tout près de la maison des livres, une colonne a revêtu ses couleurs. Non loin d'elle, une fleur rouge s'est ouverte.",
     poeme: {
       numero: 'II',
       titre: 'La Terre',
@@ -216,7 +216,7 @@ export const fresques = [
         ],
       },
     ],
-    charade: 'Vert de la tête à la queue, je bavarde dans les arbres.',
+    charade: "Fais le tour de la maison des livres et passe dans son dos. Là où l'on vient souffler, à l'abri des regards, un oiseau aux mille couleurs se repose à l'écart.",
     poeme: {
       numero: 'III',
       titre: 'Le Ciel',
