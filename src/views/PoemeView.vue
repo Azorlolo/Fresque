@@ -4,6 +4,7 @@ import { ref, computed, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { fresques, conclusion } from '../data/fresques'
 import { isUnlocked, allUnlocked, unlockedCount } from '../store/progress'
+import { playPageTurn } from '../audio/sound'
 
 const route = useRoute()
 
@@ -50,6 +51,8 @@ function holdActive(i) {
 const showLeft = ref(false)
 
 function show(i) {
+  // Bruit de page, plus sourd pour la couverture
+  playPageTurn({ heavy: i === 0 || current.value === 0 })
   current.value = i
   seen.add(i)
   showLeft.value = false

@@ -2,6 +2,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { paintReveal } from '../utils/paintReveal'
+import { playReveal } from '../audio/sound'
 
 const props = defineProps({
   fresque: { type: Object, required: true },
@@ -22,6 +23,7 @@ onMounted(() => {
   if (!revealing.value) return
   const start = () => {
     stopReveal = paintReveal(canvas.value, img.value, () => (revealing.value = false))
+    playReveal()
   }
   if (img.value.complete && img.value.naturalWidth) start()
   else img.value.addEventListener('load', start, { once: true })

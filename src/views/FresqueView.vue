@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import FresqueImage from '../components/FresqueImage.vue'
 import { fresques, getFresque } from '../data/fresques'
 import { nextCharade, consumeReveal } from '../store/progress'
+import { playTap } from '../audio/sound'
 
 const route = useRoute()
 const fresque = getFresque(route.params.id)
@@ -13,6 +14,7 @@ const selectedZone = computed(() => fresque.zones.find((z) => z.id === selectedZ
 
 // Toucher de nouveau l'élément sélectionné le désélectionne (retour à l'histoire)
 function selectZone(id) {
+  if (selectedZoneId.value !== id) playTap()
   selectedZoneId.value = selectedZoneId.value === id ? null : id
 }
 

@@ -17,6 +17,7 @@
 //  - charade   : énigme qui mène À CETTE fresque (affichée sur les autres fresques)
 //  - position  : [latitude, longitude] de la fresque sur le campus (affichée sur la carte une fois scannée)
 //  - poeme     : partie du poème révélée par cette fresque (une page du livre sur #/poeme)
+//  - ambiance  : ambiance sonore de la page : 'mer', 'terre' ou 'ciel' (voir src/audio/sound.js)
 
 export const fresques = [
   {
@@ -25,6 +26,7 @@ export const fresques = [
     token: 't7k2p9',
     position: [-22.262295822667305, 166.4054343431178], // à ajuster sur place
     image: 'fresques/tortue.jpg',
+    ambiance: 'mer',
     thumbnail: { color: 'thumbs/tortue.jpg', gray: 'thumbs/tortue-gris.jpg' },
     theme: { primary: '#0e5a78', accent: '#2ba3c4', bg: '#eef5f8', text: '#16323d' },
     nomScientifique: 'Chelonia mydas',
@@ -58,6 +60,7 @@ export const fresques = [
     token: 'h5w2q8',
     position: [-22.262880587048414, 166.4042242705398], // à ajuster sur place
     image: 'fresques/hibiscus.jpg',
+    ambiance: 'terre',
     thumbnail: { color: 'thumbs/hibiscus.jpg', gray: 'thumbs/hibiscus-gris.jpg' },
     theme: { primary: '#a3222f', accent: '#e8708f', bg: '#fbf2f2', text: '#3a1f22' },
     nomScientifique: 'Hibiscus rosa-sinensis',
@@ -91,6 +94,7 @@ export const fresques = [
     token: 'p3j7d4',
     position: [-22.263146189118988, 166.4045984387007], // à ajuster sur place
     image: 'fresques/perruche.jpg',
+    ambiance: 'ciel',
     thumbnail: { color: 'thumbs/perruche.jpg', gray: 'thumbs/perruche-gris.jpg' },
     theme: { primary: '#2f6b2a', accent: '#d9a91a', bg: '#f1f6ee', text: '#1f2e1c' },
     nomScientifique: 'Cyanoramphus saisseti', // à vérifier avec l'espèce peinte
