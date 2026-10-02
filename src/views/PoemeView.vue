@@ -10,7 +10,7 @@ const route = useRoute()
 
 // La couverture, une page par fresque (débloquée par son scan), puis la conclusion (débloquée quand tout est scanné)
 const pages = computed(() => [
-  { key: 'couverture', cover: true, numero: '✦', titre: 'Couverture', unlocked: true },
+  { key: 'couverture', cover: true, numero: '✦', unlocked: true },
   ...fresques.map((f) => ({
     ...f.poeme,
     key: f.id,

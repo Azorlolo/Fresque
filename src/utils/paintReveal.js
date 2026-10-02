@@ -123,6 +123,12 @@ export function paintReveal(canvas, img, onDone) {
   const mctx = mask.getContext('2d')
   mctx.fillStyle = mctx.strokeStyle = '#000'
 
+  // Image en couleur mise à la taille du canvas une seule fois, au lieu de la redimensionner à chaque image
+  const color = document.createElement('canvas')
+  color.width = w
+  color.height = h
+  color.getContext('2d').drawImage(img, 0, 0, w, h)
+
   // Une tache par case d'une grille, position aléatoire dans la case et ordre aléatoire :
   // c'est imprévisible mais toute la fresque finit couverte.
   const cellW = w / COLS
@@ -135,6 +141,7 @@ export function paintReveal(canvas, img, onDone) {
     const start = START_DELAY + (i / cells.length) * SPREAD + rand(-120, 120)
     return createSplat(x, y, radius * rand(0.9, 1.25), start)
   })
+  const paintStart = Math.min(...splats.map((s) => s.start))
   const paintEnd = Math.max(...splats.map((s) => s.start + s.duration))
 
   let frame
@@ -144,6 +151,12 @@ export function paintReveal(canvas, img, onDone) {
     t0 ??= now
     const t = now - t0
 
+    // Avant le premier coup de pinceau, le canvas reste vide (l'image en noir et blanc se voit dessous)
+    if (t < paintStart) {
+      frame = requestAnimationFrame(render)
+      return
+    }
+
     mctx.clearRect(0, 0, w, h)
     for (const s of splats) drawSplat(mctx, s, t)
 
@@ -151,14 +164,14 @@ export function paintReveal(canvas, img, onDone) {
     ctx.clearRect(0, 0, w, h)
     ctx.drawImage(mask, 0, 0)
     ctx.globalCompositeOperation = 'source-in'
-    ctx.drawImage(img, 0, 0, w, h)
+    ctx.drawImage(color, 0, 0)
 
     // Fondu final : la couleur recouvre les derniers espaces gris
     const fade = (t - (paintEnd - FINAL_FADE * 0.4)) / FINAL_FADE
     if (fade > 0) {
       ctx.globalCompositeOperation = 'source-over'
       ctx.globalAlpha = Math.min(1, fade)
-      ctx.drawImage(img, 0, 0, w, h)
+      ctx.drawImage(color, 0, 0)
       ctx.globalAlpha = 1
     }
 

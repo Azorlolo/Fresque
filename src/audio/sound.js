@@ -52,7 +52,7 @@ function ensureContext() {
 }
 
 // ---------- Fichiers audio (dans public/sons/) ----------
-// Absent ou illisible → son synthétisé à la place.
+// Absent ou illisible → son synthétisé à la place (sauf le bruit de page : silence).
 const PAGE_TURN_FILE = 'sons/Page-Flip.mp3' // bruit de page
 const SHAKE_FILE = 'sons/Shake-Spray.mp3' // bombe de peinture qu'on secoue (premier scan)
 const SPRAY_FILES = ['sons/Spray1.mp3', 'sons/Spray2.mp3', 'sons/Spray3.mp3'] // jets d'aérosol, tirés au hasard
@@ -427,56 +427,11 @@ export function setAmbiance(name) {
 
 // ---------- Bruitages ----------
 
-// Page qui tourne : froissement de papier qui monte, puis le claquement de la feuille qui retombe.
-// heavy : la couverture, plus grave et plus sourde.
+// Page qui tourne : fichier public/sons/Page-Flip.mp3 (silence s'il ne se charge pas).
+// heavy : la couverture, jouée plus lentement donc plus grave et plus sourde.
 export function playPageTurn({ heavy = false } = {}) {
-  if (!ready()) return
-  // Fichier fourni dans public/sons/ : on le joue (plus lent et plus grave pour la couverture)
-  if (pageTurnFile) {
-    const src = ctx.createBufferSource()
-    src.buffer = pageTurnFile
-    src.playbackRate.value = heavy ? 0.8 : rand(0.95, 1.05)
-    src.connect(master)
-    src.start()
-    return
-  }
-  const t = ctx.currentTime
-  const dur = heavy ? 0.55 : 0.42
-
-  // Glissement du papier
-  const swish = noiseSource('white', false)
-  const bp = filter('bandpass', heavy ? 500 : 1200, 0.8)
-  bp.frequency.setValueAtTime(heavy ? 500 : 1200, t)
-  bp.frequency.exponentialRampToValueAtTime(heavy ? 1600 : 4200, t + dur * 0.6)
-  bp.frequency.exponentialRampToValueAtTime(heavy ? 700 : 1500, t + dur)
-  const g = gain(0)
-  g.gain.setValueAtTime(0.0001, t)
-  g.gain.exponentialRampToValueAtTime(0.25, t + 0.04)
-  g.gain.exponentialRampToValueAtTime(0.12, t + dur * 0.4)
-  g.gain.exponentialRampToValueAtTime(0.4, t + dur * 0.75)
-  g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
-  swish.connect(bp).connect(g).connect(master)
-  swish.start(t, rand(0, 3))
-  swish.stop(t + dur + 0.05)
-
-  // Grain du papier : petits craquements irréguliers
-  const grain = noiseSource('white', false)
-  const hp = filter('highpass', 3500)
-  const gg = gain(0)
-  for (let s = 0; s < dur * 0.8; s += 0.018) gg.gain.setValueAtTime(Math.random() < 0.4 ? rand(0.02, 0.07) : 0, t + s)
-  gg.gain.setValueAtTime(0, t + dur)
-  grain.connect(hp).connect(gg).connect(master)
-  grain.start(t, rand(0, 3))
-  grain.stop(t + dur + 0.05)
-
-  // La feuille retombe
-  const flap = noiseSource('brown', false)
-  const lp = filter('lowpass', heavy ? 250 : 500)
-  const fg = gain(0)
-  envelope(fg.gain, t + dur * 0.78, heavy ? 0.9 : 0.4, 0.008, heavy ? 0.18 : 0.09)
-  flap.connect(lp).connect(fg).connect(master)
-  flap.start(t, rand(0, 3))
-  flap.stop(t + dur + 0.3)
+  if (!ready() || !pageTurnFile) return
+  playFile(pageTurnFile, ctx.currentTime, { rate: heavy ? 0.8 : rand(0.95, 1.05) })
 }
 
 // Mise en couleur d'une fresque (premier scan) : on secoue la bombe de peinture pendant que l'image

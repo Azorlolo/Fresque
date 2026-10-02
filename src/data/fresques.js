@@ -12,7 +12,7 @@
 //                  accent  : touches de couleur (bordures, zone sélectionnée)
 //                  bg      : fond de page
 //                  text    : couleur du texte
-//  - histoire : fiche détail de la fresque (nomScientifique n'est plus affiché)
+//  - histoire  : texte affiché sous la fresque tant qu'aucun élément n'est touché
 //  - zones     : éléments cliquables sur la fresque, positions en % de l'image
 //                  sousTitre : précision sous le titre de la zone, ex. l'espèce (optionnel)
 //                  info  : phrase d'introduction affichée quand on touche la zone
@@ -34,7 +34,6 @@ export const fresques = [
     ambiance: 'mer',
     thumbnail: { color: 'thumbs/tortue.jpg', gray: 'thumbs/tortue-gris.jpg' },
     theme: { primary: '#0e5a78', accent: '#2ba3c4', bg: '#eef5f8', text: '#16323d' },
-    nomScientifique: 'Chelonia mydas',
     histoire: "Il était une fois une tortue qui traversait l'océan...",
     zones: [
       // Références vérifiées : Rhee et al. 2009 (Mater. Sci. Eng. C) ; Pei et al. 2022 (Biomimetics) ;
@@ -105,7 +104,6 @@ export const fresques = [
     ambiance: 'terre',
     thumbnail: { color: 'thumbs/hibiscus.jpg', gray: 'thumbs/hibiscus-gris.jpg' },
     theme: { primary: '#a3222f', accent: '#e8708f', bg: '#fbf2f2', text: '#3a1f22' },
-    nomScientifique: 'Hibiscus rosa-sinensis',
     histoire: 'Sur la terre, les fleurs rouges éclataient de couleur...',
     zones: [
       // Références vérifiées : Mejía et al. 2023 (Molecules, cultivars d'H. rosa-sinensis) ;
@@ -171,7 +169,6 @@ export const fresques = [
     ambiance: 'ciel',
     thumbnail: { color: 'thumbs/loriquet.jpg', gray: 'thumbs/loriquet-gris.jpg' },
     theme: { primary: '#2f6b2a', accent: '#d9a91a', bg: '#f1f6ee', text: '#1f2e1c' },
-    nomScientifique: 'Trichoglossus haematodus deplanchii', // loriquet à tête bleue de Nouvelle-Calédonie
     histoire: 'Dans la forêt, deux loriquets observaient le monde...',
     zones: [
       // Références vérifiées : ChemistryViews 2024 et Arbore et al. 2024 (Science, enzyme ALDH3A2) ;

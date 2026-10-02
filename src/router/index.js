@@ -10,8 +10,6 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: '/', name: 'home', component: HomeView },
-    // Ancienne page carte : elle est maintenant sur l'accueil
-    { path: '/carte', redirect: { name: 'home', hash: '#carte' } },
     { path: '/poeme', name: 'poeme', component: PoemeView },
     {
       path: '/fresque/:id',

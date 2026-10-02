@@ -161,7 +161,6 @@ main > .fresque-image { border-radius: var(--radius); }
   border-radius: 8px;
   background: transparent;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
 }
 .zone:hover { background: rgba(255, 255, 255, 0.15); }
 .zone.selected {
@@ -190,8 +189,6 @@ main > .fresque-image { border-radius: var(--radius); }
 .charade p { font-style: italic; }
 
 .next-step h2 { font-size: 1.1rem; }
-.next-step p { margin: 0; }
-.next-step p + p { margin-top: var(--space-xs); }
 .next-step-charade { font-style: italic; }
 .next-step a { font-weight: 600; }
 
@@ -288,7 +285,6 @@ main > .fresque-image { border-radius: var(--radius); }
 .reset { align-self: center; }
 
 .zone-sous-titre {
-  margin-top: 0;
   font-style: italic;
   color: var(--muted);
 }
@@ -306,7 +302,6 @@ main > .fresque-image { border-radius: var(--radius); }
   font-size: 0.9rem;
   color: var(--muted);
 }
-.zone-liens p { margin: 0; }
 .zone-liens ul {
   margin: 4px 0 0;
   padding: 0;
@@ -435,7 +430,6 @@ main > .fresque-image { border-radius: var(--radius); }
     margin-left: var(--peek);
     transform: translateX(calc(var(--peek) / -2 * (1 - var(--opening, 1))));
   }
-  .book.dragging { transition: none; }
   /* Bouton « Voir la page de gauche » : le livre glisse à droite, la page de gauche s'affiche en entier
      et c'est le bord de la page de droite qui reste visible */
   .book-stage.show-left .book { transform: translateX(calc(100cqw - 2 * var(--peek))); }
@@ -467,7 +461,7 @@ main > .fresque-image { border-radius: var(--radius); }
   cursor: grab;
   transition: transform 0.7s cubic-bezier(0.45, 0.05, 0.35, 1);
 }
-.book.dragging { cursor: grabbing; }
+.book.dragging { cursor: grabbing; transition: none; }
 
 /* Tranche des pages et ombre du livre */
 .book::before,
@@ -631,7 +625,6 @@ main > .fresque-image { border-radius: var(--radius); }
   font-style: italic;
   color: #6f604e;
 }
-.sealed p + p { margin-top: 0; }
 .sealed strong {
   display: block;
   margin-top: 0.3em;
@@ -892,10 +885,9 @@ main > .fresque-image { border-radius: var(--radius); }
     margin-left: 50%;
     aspect-ratio: 5 / 7;
     perspective: 2400px;
+    /* Fermé, le livre est centré ; il glisse à droite à mesure que la couverture s'ouvre (--opening de 0 à 1) */
+    transform: translateX(calc(-50% * (1 - var(--opening, 1))));
   }
-  /* Fermé, le livre est centré ; il glisse à droite à mesure que la couverture s'ouvre (--opening de 0 à 1) */
-  .book { transform: translateX(calc(-50% * (1 - var(--opening, 1)))); }
-  .book.dragging { transition: none; }
   /* Tranche des pages de gauche : n'apparaît qu'une fois la couverture posée à plat,
      et disparaît dès que la couverture bouge pour qu'aucune page ne reste à gauche de celle-ci */
   .book::after {
